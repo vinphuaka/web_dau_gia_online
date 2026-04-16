@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Điều Khiển - BidMaster</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="global-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-gavel"></i>
+                    <span>BidMaster</span>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="dashboard.html">Bảng điều khiển</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <div class="user-utilities">
+                    <a href="dashboard.html#favorites" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
+                    <a href="dashboard.html#notifications" class="icon-btn" id="header-notif-btn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="badge" id="header-notif-count" style="display: none;">0</span>
+                    </a>
+                    <a href="dashboard.html#profile" class="icon-btn"><i class="fa-regular fa-user"></i></a>
+                </div>
+                <a href="sell.html" class="sell-button">Đăng sản phẩm mới</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container dashboard-container">
+        <!-- Sidebar bên trái -->
+        <aside class="dashboard-sidebar">
+            <ul class="sidebar-menu">
+                <li class="active" data-nav="overview"><a href="#"><i class="fa-solid fa-chart-line"></i> Tổng quan</a></li>
+                <li data-nav="profile"><a href="#"><i class="fa-regular fa-user"></i> Hồ sơ cá nhân</a></li>
+                <li data-nav="favorites"><a href="#"><i class="fa-regular fa-heart"></i> Sản phẩm yêu thích</a></li>
+                <li data-nav="notifications">
+                    <a href="#"><i class="fa-regular fa-bell"></i> Thông báo 
+                        <span class="badge sidebar-badge" id="sidebar-notif-count" style="display: none;">0</span>
+                    </a>
+                </li>
+                <li data-nav="transactions"><a href="#"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử giao dịch</a></li>
+                <li data-nav="settings"><a href="#"><i class="fa-solid fa-gear"></i> Cài đặt</a></li>
+                <li style="margin-top: 20px;"><a href="#" style="color: var(--danger);"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a></li>
+            </ul>
+        </aside>
+
+        <!-- Nội dung chính bên phải -->
+        <main class="dashboard-main">
+            <!-- Mục Tổng quan -->
+            <div id="section-overview">
+                <div class="dashboard-header-tabs">
+                    <button class="dashboard-tab-btn active" data-main-tab="buying">Cuộc đấu giá của tôi</button>
+                    <button class="dashboard-tab-btn" data-main-tab="selling">Sản phẩm đang bán</button>
+                </div>
+
+                <!-- Phần 1: Dành cho người mua -->
+                <section id="buying-section" class="tab-content-main active">
+                    <div class="sub-filter-bar">
+                        <button class="filter-pill active" data-filter="all">Tất cả</button>
+                        <button class="filter-pill" data-filter="active">Đang tham gia</button>
+                        <button class="filter-pill" data-filter="won">Đã thắng</button>
+                        <button class="filter-pill" data-filter="ended">Đã kết thúc</button>
+                    </div>
+
+                    <div class="management-table-wrapper">
+                        <table class="management-table">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Giá hiện tại</th>
+                                    <th>Giá của bạn</th>
+                                    <th>Thời gian còn lại</th>
+                                    <th>Trạng thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="my-bids-list">
+                                <!-- Dữ liệu JS đổ vào đây -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Phần 2: Dành cho người bán -->
+                <section id="selling-section" class="tab-content-main" style="display: none;">
+                    <div class="sub-filter-bar">
+                        <button class="filter-pill active" data-filter="active">Đang đấu giá</button>
+                        <button class="filter-pill" data-filter="pending">Chờ thanh toán</button>
+                        <button class="filter-pill" data-filter="completed">Hoàn thành</button>
+                        <button class="filter-pill" data-filter="cancelled">Đã hủy</button>
+                    </div>
+
+                    <div class="management-table-wrapper">
+                        <table class="management-table">
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Lượt bid</th>
+                                    <th>Giá cao nhất</th>
+                                    <th>Trạng thái</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="my-listings-list">
+                                <!-- Dữ liệu JS đổ vào đây -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Mục Sản phẩm yêu thích -->
+            <div id="section-favorites" style="display: none;">
+                <div class="page-title-header">
+                    <h2>Sản phẩm yêu thích</h2>
+                    <p>Danh sách các sản phẩm bạn đã lưu để theo dõi diễn biến giá.</p>
+                </div>
+                <div class="wishlist-grid" id="wishlist-container">
+                    <!-- Dữ liệu JS sẽ đổ các product-card vào đây -->
+                </div>
+            </div>
+
+            <!-- Mục Thông báo -->
+            <div id="section-notifications" style="display: none;">
+                <div class="page-title-header">
+                    <h2>Thông báo</h2>
+                    <p>Cập nhật những diễn biến mới nhất về các phiên đấu giá của bạn.</p>
+                </div>
+
+                <div class="sub-filter-bar" id="notif-filters">
+                    <button class="filter-pill active" data-notif-filter="all">Tất cả</button>
+                    <button class="filter-pill" data-notif-filter="unread">Chưa đọc</button>
+                    <button class="filter-pill" data-notif-filter="read">Đã đọc</button>
+                </div>
+
+                <div class="notifications-list" id="notifications-container">
+                    <!-- Thông báo sẽ đổ vào đây -->
+                </div>
+            </div>
+
+            <!-- Mục Lịch sử giao dịch -->
+            <div id="section-transactions" style="display: none;">
+                <div class="page-title-header">
+                    <h2>Lịch sử giao dịch</h2>
+                    <p>Theo dõi các khoản thu chi, thanh toán thắng thầu và doanh thu bán hàng của bạn.</p>
+                </div>
+
+                <div class="sub-filter-bar" id="transaction-filters">
+                    <button class="filter-pill active" data-time-filter="all">Tất cả</button>
+                    <button class="filter-pill" data-time-filter="this-month">Tháng này</button>
+                    <button class="filter-pill" data-time-filter="last-month">Tháng trước</button>
+                    <button class="filter-pill" data-time-filter="this-year">Năm nay</button>
+                </div>
+
+                <div class="management-table-wrapper">
+                    <table class="management-table">
+                        <thead>
+                            <tr>
+                                <th>Ngày giao dịch</th>
+                                <th>Nội dung</th>
+                                <th>Số tiền</th>
+                                <th>Loại</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactions-list">
+                            <!-- Dữ liệu JS đổ vào đây -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Mục Cài đặt -->
+            <div id="section-settings" style="display: none;">
+                <div class="page-title-header">
+                    <h2>Cài đặt</h2>
+                    <p>Quản lý các tùy chọn và sở thích của bạn trên BidMaster.</p>
+                </div>
+
+                <div class="profile-section-card">
+                    <div class="settings-tabs">
+                        <button class="settings-tab-btn active" data-settings-tab="general">Chung</button>
+                        <button class="settings-tab-btn" data-settings-tab="notifications">Thông báo</button>
+                        <button class="settings-tab-btn" data-settings-tab="security">Bảo mật</button>
+                    </div>
+
+                    <form id="user-settings-form">
+                        <!-- Tab 1: Chung -->
+                        <div class="settings-tab-pane active" id="settings-general">
+                            <h3>Ngôn ngữ & Khu vực</h3>
+                            <div class="form-group">
+                                <label>Ngôn ngữ hiển thị</label>
+                                <select id="setting-language">
+                                    <option value="vi">Tiếng Việt</option>
+                                    <option value="en">English</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin-bottom: 40px;">
+                                <label>Đơn vị tiền tệ</label>
+                                <select id="setting-currency">
+                                    <option value="VND">VND - Đồng Việt Nam</option>
+                                    <option value="USD">USD - Đô la Mỹ</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Tab 2: Thông báo -->
+                        <div class="settings-tab-pane" id="settings-notifications">
+                            <h3>Cấu hình thông báo</h3>
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <label for="setting-email-notif" style="font-weight: 600; cursor: pointer; margin-bottom: 0;">Nhận thông báo qua email</label>
+                                    <label class="switch-label">
+                                        <input type="checkbox" id="setting-email-notif">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <p class="form-hint">Nhận email khi có sản phẩm yêu thích sắp kết thúc hoặc khi có người vượt mặt giá của bạn.</p>
+                            </div>
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <label for="setting-browser-notif" style="font-weight: 600; cursor: pointer; margin-bottom: 0;">Nhận thông báo trên trình duyệt</label>
+                                    <label class="switch-label">
+                                        <input type="checkbox" id="setting-browser-notif">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <p class="form-hint">Hiển thị thông báo trực tiếp trên trình duyệt của bạn (cần cấp quyền).</p>
+                            </div>
+                        </div>
+
+                        <!-- Tab 3: Bảo mật -->
+                        <div class="settings-tab-pane" id="settings-security">
+                            <h3>Thay đổi mật khẩu</h3>
+                            <div class="form-group">
+                                <label>Mật khẩu hiện tại</label>
+                                <input type="password" id="settings-current-password" placeholder="********">
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>Mật khẩu mới</label>
+                                    <input type="password" id="settings-new-password" placeholder="********">
+                                </div>
+                                <div class="form-group">
+                                    <label>Xác nhận mật khẩu mới</label>
+                                    <input type="password" id="settings-confirm-password" placeholder="********">
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 40px;">
+                                <button type="button" id="change-password-btn" class="btn-outline" style="width: auto;">
+                                    <i class="fa-solid fa-key"></i> Cập nhật mật khẩu
+                                </button>
+                            </div>
+
+                            <h3>Xác thực bảo mật</h3>
+                            <div class="form-group">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                    <label for="setting-2fa" style="font-weight: 600; cursor: pointer; margin-bottom: 0;">Xác thực 2 yếu tố (2FA)</label>
+                                    <label class="switch-label">
+                                        <input type="checkbox" id="setting-2fa">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <p class="form-hint">Thêm một lớp bảo mật bằng cách yêu cầu mã xác nhận khi đăng nhập.</p>
+                            </div>
+
+                            <h3 style="margin-top: 40px;">Thiết bị đã đăng nhập</h3>
+                            <p class="form-hint">Danh sách các thiết bị hiện đang truy cập vào tài khoản của bạn.</p>
+                            <div class="device-list" id="device-list">
+                                <!-- Dữ liệu thiết bị sẽ đổ vào đây -->
+                            </div>
+
+                            <div style="margin-top: 60px; padding-top: 20px; border-top: 1px solid #fee2e2;">
+                                <h3 style="color: var(--danger);">Vùng nguy hiểm</h3>
+                                <button type="button" class="btn-outline" style="color: var(--danger); border-color: #fca5a5 !important;">Xóa tài khoản vĩnh viễn</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="form-navigation" style="border: none; margin-top: 30px; padding: 0;">
+                        <button type="button" id="save-settings-btn" class="btn-primary" style="width: auto;">
+                            <i class="fa-solid fa-floppy-disk"></i> Lưu cài đặt
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mục Hồ sơ cá nhân -->
+            <div id="section-profile" style="display: none;">
+                <div class="page-title-header">
+                    <h2>Hồ sơ cá nhân</h2>
+                    <p>Cập nhật thông tin cá nhân của bạn để người khác dễ nhận diện.</p>
+                </div>
+
+                <div class="profile-section-card">
+                    <form id="user-profile-form">
+                        <div class="profile-avatar-edit-group">
+                            <div class="profile-avatar-preview-wrapper">
+                                <img id="profile-img-preview" src="https://i.pravatar.cc/150?u=user_123" alt="Avatar">
+                            </div>
+                            <div class="form-group" style="flex-grow: 1;">
+                                <label>Link ảnh đại diện (URL)</label>
+                                <input type="url" id="profile-photo-url" placeholder="Dán link ảnh tại đây...">
+                                <p class="form-hint">Dùng link ảnh công khai để mọi người có thể thấy.</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Tên hiển thị <span class="required-star">*</span></label>
+                            <input type="text" id="profile-display-name" placeholder="Nhập tên của bạn" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Email liên hệ</label>
+                                <input type="email" value="user_123@bidmaster.com" disabled>
+                                <p class="form-hint">Email dùng để đăng nhập và không thể thay đổi.</p>
+                            </div>
+                            <div class="form-group">
+                                <label>Số điện thoại</label>
+                                <input type="tel" placeholder="090x xxx xxx">
+                            </div>
+                        </div>
+
+                        <div class="form-navigation" style="border: none; margin-top: 20px; padding: 0;">
+                            <button type="submit" id="save-profile-btn" class="btn-primary" style="width: auto;">
+                                <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="utils.js"></script>
+    <script src="timer.js"></script>
+    <script type="module" src="dashboard.js"></script>
+</body>
+</html>

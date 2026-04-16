@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - BidMaster</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body style="background-color: #f8fafc; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0;">
+    <div class="auth-card" style="background: white; padding: 40px; border-radius: 16px; box-shadow: var(--shadow); width: 100%; max-width: 400px;">
+        <div class="brand-logo" style="justify-content: center; margin-bottom: 30px;">
+            <a href="index.html" style="text-decoration: none; display: flex; align-items: center; gap: 10px; color: var(--text-main); font-size: 1.8rem; font-weight: 800;">
+                <i class="fa-solid fa-gavel" style="color: var(--primary);"></i>
+                <span>BidMaster</span>
+            </a>
+        </div>
+
+        <!-- Tab Chuyển đổi -->
+        <div class="dashboard-header-tabs" style="justify-content: center; margin-bottom: 30px;">
+            <button class="dashboard-tab-btn active" id="tab-login-btn">Đăng nhập</button>
+            <button class="dashboard-tab-btn" id="tab-register-btn">Đăng ký</button>
+        </div>
+
+        <!-- Form Đăng nhập -->
+        <form id="login-form">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="login-email" placeholder="email@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="login-password" placeholder="••••••••" required>
+            </div>
+            <div style="text-align: right; margin-bottom: 15px;">
+                <a href="#" id="forgot-password-link" style="color: var(--primary); font-size: 0.85rem; text-decoration: none;">Quên mật khẩu?</a>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Đăng nhập ngay</button>
+        </form>
+
+        <!-- Form Đăng ký (ẩn mặc định) -->
+        <form id="register-form" style="display: none;">
+            <div class="form-group">
+                <label>Họ và tên</label>
+                <input type="text" id="reg-name" placeholder="Nguyễn Văn A" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="reg-email" placeholder="email@example.com" required>
+            </div>
+            <div class="form-group">
+                <label>Mật khẩu</label>
+                <input type="password" id="reg-password" placeholder="Tối thiểu 6 ký tự" required>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 10px;">Tạo tài khoản</button>
+        </form>
+
+        <!-- Đăng nhập mạng xã hội -->
+        <div style="margin: 20px 0; text-align: center; position: relative;">
+            <hr style="border: 0; border-top: 1px solid var(--border);">
+            <span style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: white; padding: 0 15px; color: var(--text-muted); font-size: 0.85rem;">Hoặc đăng nhập với</span>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button type="button" id="google-login-btn" class="btn-outline" style="flex: 1; justify-content: center; gap: 8px;"><i class="fa-brands fa-google" style="color: #db4437;"></i> Google</button>
+            <button type="button" id="facebook-login-btn" class="btn-outline" style="flex: 1; justify-content: center; gap: 8px;"><i class="fa-brands fa-facebook" style="color: #4267B2;"></i> Facebook</button>
+        </div>
+
+        <div style="margin-top: 25px; text-align: center;">
+            <a href="index.html" style="color: var(--text-muted); font-size: 0.9rem; text-decoration: none;">
+                <i class="fa-solid fa-arrow-left"></i> Quay lại trang chủ
+            </a>
+        </div>
+    </div>
+
+    <script type="module">
+        const loginBtn = document.getElementById('tab-login-btn');
+        const regBtn = document.getElementById('tab-register-btn');
+        const loginForm = document.getElementById('login-form');
+        const regForm = document.getElementById('register-form');
+
+        loginBtn.onclick = () => {
+            loginBtn.classList.add('active'); regBtn.classList.remove('active');
+            loginForm.style.display = 'block'; regForm.style.display = 'none';
+        };
+        regBtn.onclick = () => {
+            regBtn.classList.add('active'); loginBtn.classList.remove('active');
+            regForm.style.display = 'block'; loginForm.style.display = 'none';
+        };
+    </script>
+    <script type="module" src="auth-handler.js"></script>
+</body>
+</html>

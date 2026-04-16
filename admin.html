@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Trị Viên - BidMaster</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<!-- Mặc định ẩn body để tránh rò rỉ thông tin trước khi kiểm tra quyền -->
+<body class="admin-panel" style="display: none;">
+    <header class="global-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-unlock-keyhole"></i>
+                    <span>BidMaster <small style="font-size: 0.6em; color: var(--danger);">ADMIN</small></span>
+                </a>
+            </div>
+            <div class="user-actions">
+                <span id="admin-name" style="font-weight: 600;">Adminstrator</span>
+                <a href="index.html" class="sell-button" style="background: var(--text-muted);">Thoát Admin</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container dashboard-container">
+        <aside class="dashboard-sidebar">
+            <ul class="sidebar-menu">
+                <li class="active" data-nav="admin-overview"><a href="#"><i class="fa-solid fa-gauge"></i> Tổng quan</a></li>
+                <li data-nav="admin-users"><a href="#"><i class="fa-solid fa-users-gear"></i> Quản lý người dùng</a></li>
+                <li data-nav="admin-products"><a href="#"><i class="fa-solid fa-boxes-stacked"></i> Quản lý sản phẩm</a></li>
+                <li data-nav="admin-reports"><a href="#"><i class="fa-solid fa-flag"></i> Báo cáo vi phạm</a></li>
+                <li style="margin-top: 20px;"><a href="#" id="admin-logout-btn" style="color: var(--danger);"><i class="fa-solid fa-power-off"></i> Đăng xuất</a></li>
+            </ul>
+        </aside>
+
+        <main class="dashboard-main">
+            <!-- 1. Tổng quan -->
+            <div id="section-admin-overview">
+                <div class="page-title-header">
+                    <h2>Hệ thống quản trị</h2>
+                    <p>Dữ liệu thống kê thời gian thực của sàn đấu giá.</p>
+                </div>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fa-solid fa-users"></i></div>
+                        <div class="stat-info"><h3 id="stat-total-users">0</h3><p>Người dùng</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: var(--success); background: #ecfdf5;"><i class="fa-solid fa-gavel"></i></div>
+                        <div class="stat-info"><h3 id="stat-total-prods">0</h3><p>Sản phẩm</p></div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon" style="color: var(--danger); background: #fff1f2;"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                        <div class="stat-info"><h3>520M</h3><p>Doanh thu (VND)</p></div>
+                    </div>
+                </div>
+
+                <div class="admin-chart-card">
+                    <h3>Tăng trưởng doanh thu</h3>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Quản lý người dùng -->
+            <div id="section-admin-users" style="display: none;">
+                <div class="page-title-header">
+                    <h2>Người dùng hệ thống</h2>
+                    <div class="search-bar" style="max-width: 100%; margin-top: 15px;">
+                        <input type="text" placeholder="Tìm theo tên hoặc email...">
+                    </div>
+                </div>
+                <div class="management-table-wrapper">
+                    <table class="management-table">
+                        <thead>
+                            <tr>
+                                <th>Thành viên</th>
+                                <th>Vai trò</th>
+                                <th>Trạng thái</th>
+                                <th>Ngày tham gia</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-user-list">
+                            <!-- Dữ liệu JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. Quản lý sản phẩm -->
+            <div id="section-admin-products" style="display: none;">
+                <div class="page-title-header">
+                    <h2>Danh sách sản phẩm</h2>
+                    <div class="sub-filter-bar" style="margin-top: 15px;">
+                        <button class="filter-pill active">Tất cả</button>
+                        <button class="filter-pill">Chờ duyệt</button>
+                        <button class="filter-pill">Đang đấu giá</button>
+                        <button class="filter-pill">Đã kết thúc</button>
+                    </div>
+                </div>
+                <div class="management-table-wrapper">
+                    <table class="management-table">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th>Người bán</th>
+                                <th>Giá khởi điểm</th>
+                                <th>Trạng thái</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-product-list">
+                            <!-- Dữ liệu JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="utils.js"></script>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>

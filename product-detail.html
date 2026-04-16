@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Sản Phẩm Đấu Giá</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-notification-bar">
+        <span>Phiên đấu giá đặc biệt bắt đầu lúc 20:00 hôm nay! <strong>Xem ngay</strong></span>
+    </div>
+
+    <header class="global-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-gavel"></i>
+                    <span>BidMaster</span>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Danh mục</a></li>
+                    <li><a href="#">Đấu giá</a></li>
+                    <li><a href="#">Hướng dẫn</a></li>
+                </ul>
+            </nav>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+                <button type="button" id="search-button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+            <div class="user-actions">
+                <div class="user-utilities">
+                    <a href="dashboard.html#favorites" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
+                    <a href="dashboard.html#notifications" class="icon-btn ringing"><i class="fa-regular fa-bell"></i></a>
+                    <a href="dashboard.html#profile" class="icon-btn"><i class="fa-regular fa-user"></i></a>
+                </div>
+                <a href="sell.html" class="sell-button">Đăng bán</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <header class="page-title-header">
+            <h1 id="product-detail-name">Tên Sản Phẩm Đang Tải...</h1>
+        </header>
+
+        <main class="auction-detail-card">
+            <div class="product-image-detail">
+                <img id="product-detail-image" class="skeleton-img skeleton" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Sản phẩm đấu giá">
+            </div>
+
+            <div class="product-info-detail">
+                <p class="description skeleton" id="product-detail-description">Đang tải mô tả...</p>
+                
+                <!-- 2. Product Attributes -->
+                <div class="product-attributes">
+                    <div class="attr-item">
+                        <i class="fa-solid fa-medal"></i>
+                        <span class="attr-label">Tình trạng</span>
+                        <strong id="attr-condition">--</strong>
+                    </div>
+                    <div class="attr-item">
+                        <i class="fa-solid fa-shield-check"></i>
+                        <span class="attr-label">Xác thực</span>
+                        <strong id="attr-auth">Chính hãng</strong>
+                    </div>
+                    <div class="attr-item">
+                        <i class="fa-solid fa-earth-americas"></i>
+                        <span class="attr-label">Xuất xứ</span>
+                        <strong id="attr-origin">--</strong>
+                    </div>
+                    <div class="attr-item">
+                        <i class="fa-solid fa-calendar-days"></i>
+                        <span class="attr-label">Năm sản xuất</span>
+                        <strong id="attr-year">--</strong>
+                    </div>
+                </div>
+                
+                <div class="timer-section">
+                    <span>Thời gian còn lại:</span>
+                    <div id="countdown" class="timer skeleton">00:00:00</div>
+                </div>
+
+                <div class="price-section">
+                    <div class="price-item">
+                        <span>Giá khởi điểm:</span>
+                        <strong id="start-price">Đang tải...</strong>
+                    </div>
+                    <div class="price-item highlight">
+                        <span>Giá hiện tại:</span>
+                        <strong id="current-price">Đang tải...</strong>
+                    </div>
+                </div>
+
+                <div class="bid-controls">
+                    <input type="number" id="bid-input" placeholder="Nhập giá tiền...">
+                    <button id="bid-button">Đặt Giá</button>
+                </div>
+                <p id="message" class="message"></p>
+
+                <!-- 4. Trust & Commitments -->
+                <div class="trust-commitments">
+                    <h4><i class="fa-solid fa-shield-halved"></i> Cam Kết BidMaster</h4>
+                    <div class="trust-grid">
+                        <div class="trust-badge"><i class="fa-solid fa-check-double"></i> Xác thực 100%</div>
+                        <div class="trust-badge"><i class="fa-solid fa-truck-fast"></i> Giao hàng an toàn</div>
+                        <div class="trust-badge"><i class="fa-solid fa-rotate-left"></i> Hoàn tiền đảm bảo</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 1. Tab Control -->
+        <section class="details-tabs-section">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="tab-desc">Mô tả</button>
+                <button class="tab-btn" data-tab="tab-specs">Thông số</button>
+                <button class="tab-btn" data-tab="tab-shipping">Vận Chuyển</button>
+            </div>
+            <div class="tabs-content">
+                <div class="tab-pane active" id="tab-desc">
+                    <p id="full-description">Nội dung mô tả chi tiết sản phẩm...</p>
+                </div>
+                <div class="tab-pane" id="tab-specs">
+                    <ul id="specs-list" class="specs-grid">
+                        <!-- Sẽ được điền bởi JS -->
+                        <li>Đang tải thông số...</li>
+                    </ul>
+                </div>
+                <div class="tab-pane" id="tab-shipping">
+                    <p>Sản phẩm sẽ được đóng gói chuyên nghiệp và vận chuyển qua đơn vị bảo mật cao. Thời gian dự kiến: 3-5 ngày làm việc. Miễn phí bảo hiểm hàng hóa giá trị cao.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="history-section">
+            <h3><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử đấu giá</h3>
+            <ul id="bid-history">
+                <!-- Danh sách các lượt đặt giá sẽ hiển thị ở đây -->
+            </ul>
+        </section>
+    </div>
+
+    <script src="utils.js"></script>
+    <script src="timer.js"></script>
+    <script type="module" src="product-detail.js"></script>
+</body>
+</html>

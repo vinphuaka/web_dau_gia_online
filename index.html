@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sàn Đấu Giá Trực Tuyến</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-notification-bar">
+        <span>Phiên đấu giá đặc biệt bắt đầu lúc 20:00 hôm nay! <strong>Xem ngay</strong></span>
+    </div>
+
+    <header class="global-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-gavel"></i>
+                    <span>BidMaster</span>
+                </a>
+            </div>
+            <div class="main-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">Danh mục <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; margin-left: 4px;"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#" data-category="all">Tất cả danh mục</a>
+                            <a href="#" data-category="electronics">Điện tử</a>
+                            <a href="#" data-category="fashion">Thời trang</a>
+                            <a href="#" data-category="watch">Đồng hồ</a>
+                            <a href="#" data-category="art">Nghệ thuật</a>
+                            <a href="#" data-category="home">Gia dụng</a>
+                            <a href="#" data-category="antiques">Đồ cổ</a>
+                            <a href="#" data-category="classic-car">Xe cổ</a>
+                        </div>
+                    </li>
+                    <li><a href="#">Đấu giá</a></li>
+                    <li><a href="#">Hướng dẫn</a></li>
+                </ul>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+                <button type="button" id="search-button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+            <div class="user-actions">
+                <div class="user-utilities">
+                    <a href="dashboard.html#favorites" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
+                    <a href="dashboard.html#notifications" class="icon-btn ringing"><i class="fa-regular fa-bell"></i></a>
+                    <a href="dashboard.html#profile" class="icon-btn" title="Hồ sơ cá nhân"><i class="fa-regular fa-user"></i></a>
+                </div>
+                <a href="sell.html" class="sell-button">Đăng bán</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero-section">
+        <div class="container hero-container">
+            <div class="hero-content">
+                <h1 class="hero-headline">Khám Phá Những Phiên Đấu Giá Độc Quyền</h1>
+                <p class="hero-subheadline">Sàn đấu giá trực tuyến hàng đầu dành cho các bộ sưu tập nghệ thuật, xe cổ và đồng hồ quý hiếm. Trải nghiệm cảm giác chinh phục những báu vật vượt thời gian từ khắp nơi trên thế giới.</p>
+                <div class="hero-ctas">
+                    <a href="#catalog" class="btn-primary">Bắt Đầu Đấu Giá</a>
+                    <a href="#" class="btn-outline-white">Xem Video</a>
+                </div>
+                <div class="hero-trust">
+                    <div class="trust-item">
+                        <strong>50K+</strong>
+                        <span>Người dùng</span>
+                    </div>
+                    <div class="trust-item">
+                        <strong>10K+</strong>
+                        <span>Phiên đấu giá</span>
+                    </div>
+                    <div class="trust-item">
+                        <strong>99%</strong>
+                        <span>Hài lòng</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="featured-card">
+                    <div class="featured-tag">Nổi bật</div>
+                    <div class="featured-img">
+                        <img src="https://images.unsplash.com/photo-1585123334904-845d60e97b29?w=600" alt="Rolex Submariner 1968">
+                    </div>
+                    <div class="featured-details">
+                        <h3>Rolex Submariner 1968</h3>
+                        <div class="featured-meta">
+                            <span>24 Lượt đấu giá</span>
+                            <span id="hero-timer" class="timer-display">--:--:--</span>
+                        </div>
+                        <div class="featured-price">
+                            <p>Giá hiện tại</p>
+                            <strong>450.000.000đ</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-auctions" id="catalog">
+        <div class="container">
+            <div class="section-header">
+                <div class="header-text">
+                    <h2>Phiên Đấu Giá Hot Nhất</h2>
+                    <p>Những sản phẩm quý hiếm đang được săn đón nhiều nhất hiện nay.</p>
+                </div>
+                <a href="#" class="btn-text">Xem Tất Cả <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="carousel-wrapper">
+                <button class="carousel-nav prev" data-target="hot-catalog"><i class="fa-solid fa-chevron-left"></i></button>
+                <main class="product-catalog" id="hot-catalog">
+                    <!-- Các thẻ sản phẩm sẽ được tải động bởi catalog.js -->
+                </main>
+                <button class="carousel-nav next" data-target="hot-catalog"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <section class="live-auctions">
+        <div class="container">
+            <div class="section-header dark">
+                <div class="header-text">
+                    <div class="live-status">
+                        <span class="pulse-dot"></span> ĐANG DIỄN RA
+                    </div>
+                    <h2>Phiên Đấu Giá Trực Tiếp</h2>
+                    <p>Tham gia ngay các phiên đấu giá đang diễn ra sôi nổi nhất.</p>
+                </div>
+                <a href="#" class="btn-text light">Xem Tất Cả <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="carousel-wrapper">
+                <button class="carousel-nav prev" data-target="live-catalog"><i class="fa-solid fa-chevron-left"></i></button>
+                <main class="live-auction-grid" id="live-catalog">
+                    <!-- Các thẻ đấu giá trực tiếp sẽ được tải động bởi catalog.js -->
+                </main>
+                <button class="carousel-nav next" data-target="live-catalog"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Firebase Configuration -->
+    <script type="module" src="firebase-config.js"></script>
+
+    <!-- Toast Container for Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="utils.js"></script>
+    <script src="timer.js"></script>
+    <script type="module" src="catalog.js"></script>
+</body>
+</html>

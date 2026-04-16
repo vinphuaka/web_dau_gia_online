@@ -1,0 +1,29 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Hàm helper để kiểm tra người dùng đã đăng nhập chưa
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Hàm helper để kiểm tra người dùng có phải là Admin không
+    // Lưu ý: Hàm này thực hiện một lệnh get() vào Firestore nên sẽ tính là 1 lượt đọc (read)
+    function isAdmin() {
+      return isSignedIn() && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Quy tắc cho collection 'users'
+    match /users/{userId} {
+      // Cho phép đọc thông tin nếu đã đăng nhập
+      allow read: if isSignedIn();
+      
+      // Cho phép tạo/cập nhật nếu là chính chủ hoặc là Admin
+      allow create, update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+
+      // CHỈ cho phép Admin xóa người dùng
+      allow delete: if isAdmin();
+    }
+  }
+}

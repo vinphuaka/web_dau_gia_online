@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Sản Phẩm Đấu Giá - BidMaster</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-notification-bar">
+        <span>Hệ thống hỗ trợ người bán 24/7. <strong>Liên hệ ngay</strong></span>
+    </div>
+
+    <header class="global-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-gavel"></i>
+                    <span>BidMaster</span>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Danh mục</a></li>
+                    <li><a href="#">Đấu giá</a></li>
+                    <li><a href="#">Hướng dẫn</a></li>
+                </ul>
+            </nav>
+            <div class="search-bar">
+                <input type="text" placeholder="Tìm kiếm hướng dẫn bán hàng...">
+                <button type="button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+            <div class="user-actions">
+                <div class="user-utilities">
+                    <a href="dashboard.html#favorites" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
+                    <a href="dashboard.html#notifications" class="icon-btn"><i class="fa-regular fa-bell"></i></a>
+                    <a href="dashboard.html#profile" class="icon-btn"><i class="fa-regular fa-user"></i></a>
+                </div>
+                <a href="index.html" class="sell-button" style="background-color: var(--primary);">Về trang chủ</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container sell-page-layout">
+        <main class="sell-main-content">
+            <!-- 1. Stepper -->
+            <div class="stepper-wrapper">
+                <div class="step active" data-step="1">
+                    <div class="step-icon"><i class="fa-solid fa-image"></i></div>
+                    <span>Hình ảnh</span>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-icon"><i class="fa-solid fa-pen-to-square"></i></div>
+                    <span>Thông tin</span>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-icon"><i class="fa-solid fa-list"></i></div>
+                    <span>Danh mục</span>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-icon"><i class="fa-solid fa-gavel"></i></div>
+                    <span>Đấu giá</span>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-icon"><i class="fa-solid fa-truck"></i></div>
+                    <span>Vận chuyển</span>
+                </div>
+            </div>
+
+            <form id="multi-step-sell-form" class="multi-step-form">
+                <!-- Bước 1: Hình ảnh -->
+                <section class="form-step active" id="step-1">
+                    <h2>Liên kết hình ảnh</h2>
+                    <div class="form-group">
+                        <label>URL hình ảnh sản phẩm <span class="required-star">*</span></label>
+                        <input type="url" id="prod-image-url" placeholder="https://vi-du.com/anh-san-pham.jpg" required>
+                        <p class="form-hint">Dán đường dẫn trực tiếp của hình ảnh (kết thúc bằng .jpg, .png, .webp...).</p>
+                    </div>
+                    <div class="tips-box">
+                        <h4><i class="fa-lightbulb fa-solid"></i> Lưu ý về hình ảnh:</h4>
+                        <ul>
+                            <li>Sử dụng các trang web upload ảnh uy tín để lấy link.</li>
+                            <li>Đảm bảo link ảnh có chế độ xem công khai.</li>
+                            <li>Ảnh nên có độ phân giải cao để người mua dễ quan sát.</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- Bước 2: Thông tin -->
+                <section class="form-step" id="step-2">
+                    <h2>Thông tin chi tiết</h2>
+                    <div class="form-group">
+                        <label>Tiêu đề bài đăng <span class="required-star">*</span></label>
+                        <input type="text" id="prod-name" maxlength="100" placeholder="VD: Rolex Submariner 116610LN Date..." required>
+                        <div class="char-counter" id="name-counter">0/100</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Mô tả chi tiết <span class="required-star">*</span></label>
+                        <textarea id="prod-desc" rows="4" maxlength="2000" placeholder="Mô tả về nguồn gốc, lịch sử và tình trạng món đồ..." required></textarea>
+                        <div class="char-counter" id="desc-counter">0/2000</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Tình trạng sản phẩm <span class="required-star">*</span></label>
+                        <div class="selection-cards">
+                            <label class="card-option">
+                                <input type="radio" name="condition" value="Mới 100%" checked>
+                                <div class="card-content"><strong>Mới 100%</strong><span>Nguyên seal/box</span></div>
+                            </label>
+                            <label class="card-option">
+                                <input type="radio" name="condition" value="Như mới">
+                                <div class="card-content"><strong>Như mới</strong><span>98-99%</span></div>
+                            </label>
+                            <label class="card-option">
+                                <input type="radio" name="condition" value="Tốt">
+                                <div class="card-content"><strong>Tốt</strong><span>Đã qua sử dụng</span></div>
+                            </label>
+                            <label class="card-option">
+                                <input type="radio" name="condition" value="Khá">
+                                <div class="card-content"><strong>Khá</strong><span>Trầy xước nhẹ</span></div>
+                            </label>
+                            <label class="card-option">
+                                <input type="radio" name="condition" value="Trung bình">
+                                <div class="card-content"><strong>Trung bình</strong><span>Cần bảo trì</span></div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Thương hiệu <span class="required-star">*</span></label><input type="text" id="prod-brand" placeholder="VD: Rolex, Omega..." required></div>
+                        <div class="form-group"><label>Năm sản xuất</label><input type="number" id="prod-year" placeholder="VD: 2023"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Chất liệu</label><input type="text" id="prod-material" placeholder="VD: Thép không gỉ, Vàng 18k..."></div>
+                        <div class="form-group"><label>Kích thước</label><input type="text" id="prod-size" placeholder="VD: 40mm, 42mm..."></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Giấy tờ / Chứng nhận</label>
+                        <input type="text" id="prod-docs" placeholder="VD: Full box, Giấy chứng nhận chính hãng...">
+                    </div>
+                </section>
+
+                <!-- Bước 3: Danh mục -->
+                <section class="form-step" id="step-3">
+                    <h2>Chọn Danh mục</h2>
+                    <p class="form-hint">Chọn danh mục phù hợp để người mua dễ dàng tìm thấy</p>
+                    <div class="dual-column-select">
+                        <div class="category-list main-cats">
+                            <div class="cat-item" data-main="watch">Đồng hồ</div>
+                            <div class="cat-item" data-main="jewelry">Trang sức</div>
+                            <div class="cat-item" data-main="art">Nghệ thuật</div>
+                            <div class="cat-item" data-main="antiques">Đồ cổ</div>
+                            <div class="cat-item" data-main="classic-car">Xe cổ</div>
+                            <div class="cat-item" data-main="fashion">Thời trang</div>
+                            <div class="cat-item" data-main="collectibles">Sưu tầm</div>
+                            <div class="cat-item" data-main="electronics">Điện tử</div>
+                        </div>
+                        <div class="category-list sub-cats">
+                            <select id="prod-category" size="10">
+                                <option value="" disabled selected>Chọn danh mục phụ...</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bước 4: Đấu giá -->
+                <section class="form-step" id="step-4">
+                    <h2>Thiết lập Đấu giá</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Giá khởi điểm (VND) <span class="required-star">*</span></label>
+                            <input type="number" id="prod-price" placeholder="VD: 10000000" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Giá mua ngay (VND)</label>
+                            <input type="number" id="prod-buynow" placeholder="Lớn hơn giá khởi điểm">
+                            <div id="buynow-error" class="error-message" style="display:none; color: var(--danger); font-size: 0.8rem; margin-top: 5px;">Giá mua ngay phải lớn hơn giá khởi điểm</div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group"><label>Bước giá tối thiểu</label><input type="number" id="prod-increment" value="100000"></div>
+                        <div class="form-group">
+                            <label>Thời gian đấu giá</label>
+                            <select id="prod-duration">
+                                <option value="1">1 Ngày</option>
+                                <option value="3" selected>3 Ngày</option>
+                                <option value="5">5 Ngày</option>
+                                <option value="7">7 Ngày</option>
+                                <option value="14">14 Ngày</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Thời điểm bắt đầu</label>
+                        <div class="selection-cards">
+                            <label class="card-option">
+                                <input type="radio" name="start-time" value="now" checked>
+                                <div class="card-content"><strong>Ngay lập tức</strong></div>
+                            </label>
+                            <label class="card-option">
+                                <input type="radio" name="start-time" value="schedule">
+                                <div class="card-content"><strong>Lên lịch</strong></div>
+                            </label>
+                        </div>
+                        <div id="schedule-container" style="display: none; margin-top: 15px;">
+                            <input type="datetime-local" id="prod-start-datetime">
+                        </div>
+                    </div>
+                    <div class="toggle-group">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <label for="prod-auto-extend" style="font-weight: 600; cursor: pointer; margin-bottom: 0;">Tự động gia hạn (Nếu có bid giây cuối)</label>
+                            <label class="switch-label">
+                                <input type="checkbox" id="prod-auto-extend" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bước 5: Vận chuyển -->
+                <section class="form-step" id="step-5">
+                    <h2>Vận chuyển & Giao hàng</h2>
+                    <p class="form-hint">Thiết lập phương thức vận chuyển và bảo mật cho món đồ của bạn.</p>
+                    <div class="shipping-options">
+                        <div class="shipping-method-item">
+                            <div class="method-info">
+                                <i class="fa-solid fa-truck-fast"></i>
+                                <div class="method-text">
+                                    <strong>Giao hàng nội địa</strong>
+                                    <span>Sử dụng các đơn vị vận chuyển tích hợp của sàn.</span>
+                                </div>
+                            </div>
+                            <label class="switch-label">
+                                <input type="checkbox" id="ship-domestic" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="shipping-method-item">
+                            <div class="method-info">
+                                <i class="fa-solid fa-plane-up"></i>
+                                <div class="method-text">
+                                    <strong>Giao hàng quốc tế</strong>
+                                    <span>Tiếp cận người sưu tầm trên toàn thế giới (Dành cho đồ giá trị).</span>
+                                </div>
+                            </div>
+                            <label class="switch-label">
+                                <input type="checkbox" id="ship-international">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="shipping-method-item">
+                            <div class="method-info">
+                                <i class="fa-solid fa-handshake"></i>
+                                <div class="method-text">
+                                    <strong>Tự đến lấy (Local Pickup)</strong>
+                                    <span>Phù hợp đồ cồng kềnh hoặc đồ cực kỳ giá trị cần kiểm tra trực tiếp.</span>
+                                </div>
+                            </div>
+                            <label class="switch-label">
+                                <input type="checkbox" id="ship-pickup" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-row" style="margin-top: 25px;">
+                        <div class="form-group">
+                            <label>Cân nặng ước tính (kg)</label>
+                            <input type="number" id="prod-weight" placeholder="VD: 0.5" step="0.1">
+                        </div>
+                        <div class="form-group insurance-info-box">
+                            <label><i class="fa-solid fa-shield-heart"></i> Bảo hiểm hàng hóa</label>
+                            <p>Đảm bảo an toàn tuyệt đối cho các mặt hàng dễ vỡ hoặc đồ xa xỉ trong quá trình luân chuyển.</p>
+                        </div>
+                    </div>
+
+                    <div class="fee-alert seller-protection">
+                        <h4><i class="fa-solid fa-user-shield"></i> Cam kết bảo vệ người bán</h4>
+                        <p>BidMaster đảm bảo thanh toán an toàn qua hệ thống ký quỹ và hỗ trợ xử lý khiếu nại vận chuyển chuyên nghiệp.</p>
+                    </div>
+                </section>
+
+                <div class="form-navigation">
+                    <button type="button" id="prev-btn" class="btn-outline" disabled><i class="fa-solid fa-arrow-left"></i> Quay lại</button>
+                    <button type="button" id="next-btn" class="btn-primary">Tiếp theo <i class="fa-solid fa-arrow-right"></i></button>
+                    <button type="submit" id="submit-btn" class="btn-success" style="display:none">Hoàn Tất Đăng Bài <i class="fa-solid fa-check"></i></button>
+                </div>
+            </form>
+        </main>
+
+        <!-- 3. Sidebar -->
+        <aside class="sell-sidebar">
+            <div class="sidebar-block sticky-block">
+                <h3 class="sidebar-title">Xem trước tin đăng</h3>
+                <div id="preview-container">
+                    <!-- Sẽ render product-card ở đây -->
+                    <div class="product-card">
+                        <div class="product-image-thumbnail">
+                            <div class="card-badges">
+                                <span class="badge-live">LIVE</span>
+                                <span id="prev-badge-cat" class="badge-cat">Danh mục</span>
+                            </div>
+                            <img id="prev-img" src="https://placehold.co/300?text=Chua+co+anh" alt="Chưa có ảnh">
+                            <div id="no-image-placeholder" class="no-image-placeholder active">Chưa có ảnh</div>
+                        </div>
+                        <div class="product-details">
+                            <h3 id="prev-title">Tiêu đề sản phẩm</h3>
+                            <p id="prev-desc-text" class="preview-description">Mô tả chi tiết sẽ hiển thị ở đây...</p>
+                            <div class="card-footer">
+                                <div class="price-info">
+                                    <span>Giá khởi điểm</span>
+                                    <strong id="prev-price">0đ</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fee-breakdown">
+                    <h3 class="sidebar-title">Phí dịch vụ ước tính</h3>
+                    <ul>
+                        <li><span>Phí đăng bài</span> <span class="free">Miễn phí</span></li>
+                        <li><span>Phí giao dịch (3%)</span> <span id="fee-calc">0đ</span></li>
+                        <li><span>Phí thanh toán (2%)</span> <span id="fee-pay">0đ</span></li>
+                        <li class="total"><span>Tổng phí dự kiến</span> <span id="total-fee">0đ</span></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="spinner"></div>
+            <div class="success-icon" style="display: none;"><i class="fa-solid fa-circle-check"></i></div>
+            <p id="modal-status-text">Đang đăng bài...</p>
+            <span id="modal-sub-text" class="modal-subtext">Vui lòng đợi trong giây lát, hệ thống đang xử lý dữ liệu của bạn.</span>
+        </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script type="module" src="sell.js"></script>
+</body>
+</html>

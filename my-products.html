@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản Phẩm Của Tôi - BidMaster</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="global-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-gavel"></i>
+                    <span>BidMaster</span>
+                </a>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="index.html">Trang chủ</a></li>
+                    <li><a href="#">Đấu giá của tôi</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="sell.html" class="sell-button">Đăng sản phẩm mới</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container" style="margin-top: 40px;">
+        <div class="section-header">
+            <div class="header-text">
+                <h2>Quản lý sản phẩm đã đăng</h2>
+                <p>Theo dõi và quản lý các phiên đấu giá bạn đã tạo.</p>
+            </div>
+        </div>
+
+        <div class="management-table-wrapper">
+            <table class="management-table">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Giá hiện tại</th>
+                        <th>Thời gian</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="my-products-list">
+                    <!-- Dữ liệu sẽ đổ vào đây -->
+                </tbody>
+            </table>
+            <div id="no-products-msg" style="display: none; text-align: center; padding: 40px; color: var(--text-muted);">
+                Bạn chưa đăng sản phẩm nào. <a href="sell.html" style="color: var(--primary);">Đăng ngay!</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="utils.js"></script>
+    <script type="module" src="my-products.js"></script>
+</body>
+</html>
