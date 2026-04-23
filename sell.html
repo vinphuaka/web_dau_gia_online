@@ -145,9 +145,10 @@
                 <!-- Bước 3: Danh mục -->
                 <section class="form-step" id="step-3">
                     <h2>Chọn Danh mục</h2>
-                    <p class="form-hint">Chọn danh mục phù hợp để người mua dễ dàng tìm thấy</p>
-                    <div class="dual-column-select">
-                        <div class="category-list main-cats">
+                    <p class="form-hint">Chọn một danh mục chính và thêm các thẻ (tags) để người mua dễ tìm thấy sản phẩm của bạn hơn.</p>
+                    <div class="form-group">
+                        <label>Danh mục chính</label>
+                        <div class="category-list main-cats" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
                             <div class="cat-item" data-main="watch">Đồng hồ</div>
                             <div class="cat-item" data-main="jewelry">Trang sức</div>
                             <div class="cat-item" data-main="art">Nghệ thuật</div>
@@ -157,11 +158,18 @@
                             <div class="cat-item" data-main="collectibles">Sưu tầm</div>
                             <div class="cat-item" data-main="electronics">Điện tử</div>
                         </div>
-                        <div class="category-list sub-cats">
-                            <select id="prod-category" size="10">
-                                <option value="" disabled selected>Chọn danh mục phụ...</option>
-                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Thẻ tìm kiếm (Tags)</label>
+                        <div class="tags-input-wrapper" style="border: 1px solid var(--border); border-radius: 8px; padding: 10px; background: white;">
+                            <div id="tags-container" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 5px;"></div>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="text" id="tag-input" placeholder="Nhập thẻ... (VD: #rolex)" style="border: none; outline: none; flex: 1; padding: 5px 0;">
+                                <button type="button" id="add-tag-btn" class="btn-primary" style="padding: 5px 15px; font-size: 0.85rem; border-radius: 6px; white-space: nowrap;">Thêm Tag</button>
+                            </div>
                         </div>
+                        <div id="suggested-tags" style="margin-top: 10px; display: flex; flex-wrap: wrap; gap: 8px;"></div>
+                        <p class="form-hint">Ví dụ: #rolex, #vintage, #automatic...</p>
                     </div>
                 </section>
 
@@ -182,14 +190,18 @@
                     <div class="form-row">
                         <div class="form-group"><label>Bước giá tối thiểu</label><input type="number" id="prod-increment" value="100000"></div>
                         <div class="form-group">
-                            <label>Thời gian đấu giá</label>
-                            <select id="prod-duration">
-                                <option value="1">1 Ngày</option>
-                                <option value="3" selected>3 Ngày</option>
-                                <option value="5">5 Ngày</option>
-                                <option value="7">7 Ngày</option>
-                                <option value="14">14 Ngày</option>
-                            </select>
+                            <label>Thời gian đấu giá <span class="required-star">*</span></label>
+                            <div class="form-row" style="margin-top: 0; gap: 10px;">
+                                <div style="flex: 1;">
+                                    <input type="number" id="prod-days" value="3" min="0" placeholder="Ngày">
+                                    <p class="form-hint">Số ngày</p>
+                                </div>
+                                <div style="flex: 1;">
+                                    <input type="number" id="prod-hours" value="0" min="0" max="23" placeholder="Giờ">
+                                    <p class="form-hint">Số giờ (0-23)</p>
+                                </div>
+                            </div>
+                            <div id="duration-error" class="error-message" style="display:none; color: var(--danger); font-size: 0.8rem; margin-top: 5px;">Thời gian đấu giá tối thiểu là 1 tiếng</div>
                         </div>
                     </div>
                     <div class="form-group">
@@ -304,10 +316,15 @@
                             </div>
                             <img id="prev-img" src="https://placehold.co/300?text=Chua+co+anh" alt="Chưa có ảnh">
                             <div id="no-image-placeholder" class="no-image-placeholder active">Chưa có ảnh</div>
+                            <div class="timer-overlay">
+                                <i class="fa-regular fa-clock"></i>
+                                <span id="prev-timer">3 ngày 0 giờ</span>
+                            </div>
                         </div>
                         <div class="product-details">
                             <h3 id="prev-title">Tiêu đề sản phẩm</h3>
                             <p id="prev-desc-text" class="preview-description">Mô tả chi tiết sẽ hiển thị ở đây...</p>
+                            <p id="prev-end-time" style="font-size: 0.8rem; color: var(--primary); font-weight: 600; margin-top: 5px;">Dự kiến kết thúc: --:-- --/--/----</p>
                             <div class="card-footer">
                                 <div class="price-info">
                                     <span>Giá khởi điểm</span>

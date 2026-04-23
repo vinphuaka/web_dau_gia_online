@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tất cả sản phẩm - BidMaster</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="top-notification-bar">
+        <span>Khám phá toàn bộ bộ sưu tập độc quyền tại BidMaster!</span>
+    </div>
+
+    <header class="global-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <i class="fa-solid fa-gavel"></i>
+                    <span>BidMaster</span>
+                </a>
+            </div>
+            <div class="main-nav">
+                <ul>
+                    <li class="dropdown">
+                        <a href="javascript:void(0)" class="dropbtn">Danh mục <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; margin-left: 4px;"></i></a>
+                        <div class="dropdown-content">
+                            <a href="products.html">Tất cả danh mục</a>
+                            <a href="#" data-category="electronics">Điện tử</a>
+                            <a href="#" data-category="fashion">Thời trang</a>
+                            <a href="#" data-category="watch">Đồng hồ</a>
+                            <a href="#" data-category="art">Nghệ thuật</a>
+                            <a href="#" data-category="home">Gia dụng</a>
+                            <a href="#" data-category="antiques">Đồ cổ</a>
+                            <a href="#" data-category="classic-car">Xe cổ</a>
+                        </div>
+                    </li>
+                    <li><a href="#">Đấu giá</a></li>
+                    <li><a href="#">Hướng dẫn</a></li>
+                </ul>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+                <button type="button" id="search-button">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
+            <div class="user-actions">
+                <div class="user-utilities">
+                    <a href="dashboard.html#favorites" class="icon-btn"><i class="fa-regular fa-heart"></i></a>
+                    <a href="dashboard.html#notifications" class="icon-btn ringing"><i class="fa-regular fa-bell"></i></a>
+                    <a href="dashboard.html#profile" class="icon-btn" title="Hồ sơ cá nhân"><i class="fa-regular fa-user"></i></a>
+                </div>
+                <a href="sell.html" class="sell-button">Đăng bán</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="min-height: 80vh;">
+        <div class="page-title-header" style="margin-top: 40px;">
+            <h2 id="catalog-title">Tất cả danh mục</h2>
+            <p>
+                Danh sách toàn bộ sản phẩm đang được đấu giá trên sàn.
+                <span id="product-count" style="margin-left: 10px; font-weight: 600; color: var(--primary);"></span>
+            </p>
+        </div>
+
+        <div class="filter-section" style="border-bottom: none; margin-bottom: 20px;">
+            <div class="filter-group">
+                <label>Sắp xếp:</label>
+                <select id="sort-select">
+                    <option value="newest">Mới nhất</option>
+                    <option value="price-asc">Giá thấp đến cao</option>
+                    <option value="price-desc">Giá cao đến thấp</option>
+                    <option value="ending-soon">Sắp kết thúc</option>
+                </select>
+            </div>
+            <div class="filter-group" style="margin-left: auto;">
+                <label>Khoảng giá:</label>
+                <input type="number" id="min-price" placeholder="Từ (VND)" style="width: 130px; padding: 8px; border: 1px solid var(--border); border-radius: 6px;">
+                <span>-</span>
+                <input type="number" id="max-price" placeholder="Đến (VND)" style="width: 130px; padding: 8px; border: 1px solid var(--border); border-radius: 6px;">
+                <button id="price-filter-btn" class="btn-primary" style="padding: 8px 15px; font-size: 0.9rem; margin-left: 5px;">Lọc</button>
+            </div>
+        </div>
+
+        <div id="all-products-grid" class="product-catalog grid-view">
+            <!-- Dữ liệu sản phẩm sẽ được products.js render vào đây -->
+        </div>
+
+        <div id="pagination-container" class="pagination-container"></div>
+    </main>
+
+    <footer style="margin-top: 80px; padding: 40px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted);">
+        <div class="container">
+            <p>&copy; 2024 BidMaster - Sàn đấu giá trực tuyến hàng đầu.</p>
+        </div>
+    </footer>
+
+    <script src="utils.js"></script>
+    <script src="timer.js"></script>
+    <script type="module" src="products.js"></script>
+</body>
+</html>

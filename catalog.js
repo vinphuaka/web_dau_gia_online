@@ -9,6 +9,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   const productCatalog = document.querySelector(".product-catalog");
   const liveAuctionGrid = document.querySelector(".live-auction-grid");
   const searchInput = document.getElementById("search-input");
+  const suggestionsContainer = document.getElementById("search-suggestions");
+  const searchLoader = document.getElementById("search-loader");
   const searchButton = document.getElementById("search-button");
   let searchTimeout;
   let heroTimerInstance = null;
@@ -63,6 +65,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const displayCat = categoryMap[product.category] || product.category || "Chung";
     const bidCount = product.history ? product.history.length : 0;
 
+    const tagsHTML = (product.tags || []).map(tag => {
+      const style = window.Utils.getTagStyle(tag);
+      return `<span style="background: ${style.bg}; color: ${style.text}; font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">#${tag}</span>`;
+    }).join('');
+
     const card = document.createElement("div");
     card.classList.add("product-card");
 
@@ -81,6 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
             <div class="product-details">
                 <h3>${product.name}</h3>
+                <div class="product-tags" style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">${tagsHTML}</div>
                 <p class="bids-count"><i class="fa-solid fa-users"></i> ${bidCount} lượt đấu giá</p>
                 <div class="card-footer">
                     <div class="price-info">
@@ -115,6 +123,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const topBidderAvatar = product.topBidder?.avatar || "https://i.pravatar.cc/150?u=default";
     const increment = product.minIncrement || product.increment || 100000;
 
+    const tagsHTML = (product.tags || []).map(tag => {
+      const style = window.Utils.getTagStyle(tag);
+      return `<span style="background: ${style.bg}; color: ${style.text}; font-size: 0.65rem; padding: 2px 8px; border-radius: 10px; font-weight: 600;">#${tag}</span>`;
+    }).join('');
+
     card.innerHTML = `
             <div class="product-image-thumbnail">
                 <div class="viewer-count">
@@ -128,6 +141,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             </div>
             <div class="product-details">
                 <h3>${product.name}</h3>
+                <div class="product-tags" style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px;">${tagsHTML}</div>
                 <div class="top-bidder">
                     <img src="${topBidderAvatar}" class="bidder-avatar">
                     <div class="bidder-info">
@@ -168,10 +182,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             return; 
         }
 
+        const timeData = window.Utils.calculateRemainingTime(product);
         const timer = new window.AuctionTimer(
-          product.timeRemainingSeconds || 3600,
+          timeData.seconds,
           (timeStr) => {
-            timerDisplayElement.innerText = timeStr;
+            timerDisplayElement.innerText = timeData.isComingSoon ? `Chờ: ${timeStr}` : timeStr;
           },
           () => {
             if (timerDisplayElement) timerDisplayElement.innerText = "KẾT THÚC";
@@ -213,10 +228,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        const timeData = window.Utils.calculateRemainingTime(product);
         const timer = new window.AuctionTimer(
-          product.timeRemainingSeconds || 3600,
+          timeData.seconds,
           (time) => {
-            if (timerElem) timerElem.innerText = `Kết thúc trong: ${time}`;
+            if (timerElem) timerElem.innerText = timeData.isComingSoon ? `Bắt đầu sau: ${time}` : `Kết thúc trong: ${time}`;
           },
           () => {
             if (timerElem) timerElem.innerText = "PHIÊN KẾT THÚC";
@@ -231,11 +247,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function applyFilters() {
-    const search = (searchInput.value || "").toLowerCase();
+    const search = (searchInput.value || "").toLowerCase().trim().replace(/^#/, "");
     const filtered = allProducts.filter(
       (p) =>
         (currentCategory === "all" || p.category === currentCategory) &&
-        p.name.toLowerCase().includes(search),
+        (p.name.toLowerCase().includes(search) || 
+         (p.tags && p.tags.some(t => t.toLowerCase().includes(search))))
     );
     displayProducts(filtered);
   }
@@ -243,23 +260,96 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Lắng nghe sự kiện click trên các mục của dropdown danh mục
   document.querySelectorAll(".dropdown-content a").forEach(link => {
     link.addEventListener("click", (e) => {
-      e.preventDefault();
       const cat = e.target.getAttribute("data-category");
       if (cat) {
+        e.preventDefault();
         currentCategory = cat;
         applyFilters();
       }
     });
   });
 
-  searchButton.addEventListener("click", applyFilters);
+  // Thay đổi: Khi nhấn nút kính lúp, chuyển hướng sang trang products.html kèm từ khóa
+  searchButton.addEventListener("click", () => {
+    const query = (searchInput.value || "").trim();
+    if (query) {
+      const progressBar = document.createElement('div');
+      progressBar.className = 'page-progress';
+      document.body.appendChild(progressBar);
+      setTimeout(() => progressBar.style.width = '70%', 10);
 
-  // Thêm tính năng debounce search cho ô nhập liệu
+      document.body.classList.add('page-loading');
+      setTimeout(() => {
+        window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+      }, 350); // Đợi hiệu ứng CSS hoàn tất (0.35s < 0.4s)
+    }
+  });
+
   searchInput.addEventListener("input", () => {
+    const query = (searchInput.value || "").toLowerCase().trim();
+
+    if (searchLoader) searchLoader.style.display = "block";
+
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
       applyFilters();
-    }, 500); // Chờ 500ms sau khi người dùng ngừng gõ mới thực hiện lọc
+
+      if (query.length < 2) {
+        suggestionsContainer.style.display = "none";
+        if (searchLoader) searchLoader.style.display = "none";
+        return;
+      }
+
+      // Hàm hỗ trợ làm nổi bật văn bản
+      const highlightText = (text, q) => {
+        const regex = new RegExp(`(${q})`, 'gi');
+        return text.replace(regex, '<span class="highlight">$1</span>');
+      };
+
+      const matches = allProducts.filter(p =>
+        p.name.toLowerCase().includes(query) ||
+        (p.tags && p.tags.some(t => t.toLowerCase().includes(query)))
+      ).slice(0, 6); // Lấy tối đa 6 gợi ý
+
+      if (matches.length > 0) {
+        suggestionsContainer.innerHTML = matches.map(p => `
+          <div class="suggestion-item" data-id="${p.id}">
+            <img src="${p.imageUrl}" alt="${p.name}">
+            <div class="suggestion-info">
+              <h4>${highlightText(p.name, query)}</h4>
+              <p>${window.Utils.formatCurrency(p.currentPrice)}</p>
+            </div>
+          </div>
+        `).join('');
+        suggestionsContainer.style.display = "block";
+
+        // Gán sự kiện click cho từng item trong gợi ý
+        suggestionsContainer.querySelectorAll('.suggestion-item').forEach(item => {
+          item.onclick = () => {
+            const progressBar = document.createElement('div');
+            progressBar.className = 'page-progress';
+            document.body.appendChild(progressBar);
+            setTimeout(() => progressBar.style.width = '70%', 10);
+
+            document.body.classList.add('page-loading');
+            setTimeout(() => {
+              window.location.href = `product-detail.html?id=${item.dataset.id}`;
+            }, 350);
+          };
+        });
+      } else {
+        suggestionsContainer.style.display = "none";
+      }
+
+      if (searchLoader) searchLoader.style.display = "none";
+    }, 300);
+  });
+
+  // Đóng danh sách gợi ý khi click ra ngoài
+  document.addEventListener("click", (e) => {
+    if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+      suggestionsContainer.style.display = "none";
+    }
   });
 
   function updateHeroSection(product) {
@@ -282,9 +372,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (heroTimer && typeof window.AuctionTimer === 'function') {
       if (heroTimerInstance) heroTimerInstance.stop();
+      const timeData = window.Utils.calculateRemainingTime(product);
       heroTimerInstance = new window.AuctionTimer(
-        product.timeRemainingSeconds || 3600,
-        (time) => { heroTimer.innerText = time; },
+        timeData.seconds,
+        (time) => { heroTimer.innerText = timeData.isComingSoon ? `Chờ: ${time}` : time; },
         () => { heroTimer.innerText = "KẾT THÚC"; }
       );
       heroTimerInstance.start();
@@ -385,10 +476,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. Xử lý "Phiên Đấu Giá Trực Tiếp"
     const liveProducts = [...allProducts]
         .filter(p => {
-            const seconds = Number(p.timeRemainingSeconds);
-            return !isNaN(seconds) && seconds > 0;
+            const timeData = window.Utils.calculateRemainingTime(p);
+            return timeData.seconds > 0;
         })
-        .sort((a, b) => Number(a.timeRemainingSeconds) - Number(b.timeRemainingSeconds))
+        .sort((a, b) => window.Utils.calculateRemainingTime(a).seconds - window.Utils.calculateRemainingTime(b).seconds)
         .slice(0, 6); // Hiển thị tối đa 6 sản phẩm sắp kết thúc
 
     displayLiveAuctions(liveProducts);

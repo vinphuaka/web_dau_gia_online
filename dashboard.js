@@ -250,51 +250,42 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadNotifications() {
         const container = document.getElementById('notifications-container');
         if (!container) return;
-        container.innerHTML = '<div class="skeleton-text skeleton" style="height: 60px;"></div>'.repeat(3);
 
-        const readNotifs = JSON.parse(localStorage.getItem('read_notifications') || '[]');
-        // Lấy danh sách yêu thích của user
-        const qWishlist = query(collection(db, "wishlist"), where("userId", "==", CURRENT_USER_ID));
+        if (activeListeners.notifications) activeListeners.notifications();
+
+        const qNotifs = query(
+            collection(db, "notifications"), 
+            where("userId", "==", CURRENT_USER_ID),
+            orderBy("timestamp", "desc")
+        );
         
-        // Ở đây chúng ta dùng query để lấy các productId user đã thích
-        onSnapshot(qWishlist, async (snapshot) => {
+        activeListeners.notifications = onSnapshot(qNotifs, (snapshot) => {
             let notifications = [];
-            
-            for (const wishDoc of snapshot.docs) {
-                const wishData = wishDoc.data();
-                const prodSnap = await getDoc(doc(db, "products", wishData.productId));
-                
-                if (prodSnap.exists()) {
-                    const product = prodSnap.data();
-                    const seconds = product.timeRemainingSeconds;
-                    const isRead = readNotifs.includes(prodSnap.id);
-                    
-                    // Nếu sản phẩm sắp kết thúc (dưới 24h = 86400s)
-                    if (seconds > 0 && seconds < 86400) {
-                        const notif = {
-                            id: prodSnap.id,
-                            title: "Sản phẩm yêu thích sắp kết thúc!",
-                            message: `Sản phẩm "<strong>${product.name}</strong>" chỉ còn chưa đầy 24 giờ. Hãy kiểm tra giá ngay!`,
-                            isUrgent: seconds < 3600, // Khẩn cấp nếu còn dưới 1 giờ
-                            timeStr: seconds < 3600 ? "Sắp kết thúc" : "Còn chưa tới 24h",
-                            isRead: isRead
-                        };
+            snapshot.forEach(docSnap => {
+                const data = docSnap.data();
+                const notif = {
+                    id: docSnap.id,
+                    productId: data.productId,
+                    title: data.type === 'seller_reply' ? "Phản hồi từ người bán" : "Thông báo",
+                    message: data.message,
+                    isUrgent: data.type === 'seller_reply',
+                    timeStr: data.timestamp?.toDate().toLocaleString('vi-VN') || "Vừa xong",
+                    isRead: data.isRead
+                };
 
-                        if (currentNotifFilter === 'all') notifications.push(notif);
-                        else if (currentNotifFilter === 'unread' && !isRead) notifications.push(notif);
-                        else if (currentNotifFilter === 'read' && isRead) notifications.push(notif);
-                    }
-                }
-            }
+                if (currentNotifFilter === 'all') notifications.push(notif);
+                else if (currentNotifFilter === 'unread' && !notif.isRead) notifications.push(notif);
+                else if (currentNotifFilter === 'read' && notif.isRead) notifications.push(notif);
+            });
 
             container.innerHTML = notifications.length ? '' : '<div class="notif-empty"><i class="fa-regular fa-bell-slash" style="font-size: 3rem; opacity: 0.2; margin-bottom: 15px; display: block;"></i>Hiện không có thông báo nào mới.</div>';
             
             notifications.forEach(n => {
                 const item = document.createElement('a');
-                item.href = `product-detail.html?id=${n.id}`;
+                item.href = `product-detail.html?id=${n.productId}`;
                 item.className = `notification-item ${n.isUrgent ? 'urgent' : ''} ${n.isRead ? 'read' : 'unread'}`;
                 item.innerHTML = `
-                    <div class="notification-icon"><i class="fa-solid ${n.isUrgent ? 'fa-triangle-exclamation' : 'fa-clock'}"></i></div>
+                    <div class="notification-icon"><i class="fa-solid ${n.isUrgent ? 'fa-reply' : 'fa-bell'}"></i></div>
                     <div class="notification-content">
                         <h4>${n.title}</h4>
                         <p>${n.message}</p>
@@ -303,15 +294,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${!n.isRead ? '<div class="unread-dot"></div>' : ''}
                 `;
 
-                // Đánh dấu đã đọc khi nhấn vào
-                item.addEventListener('click', () => {
+                item.addEventListener('click', async (e) => {
                     if (!n.isRead) {
-                        const latestRead = JSON.parse(localStorage.getItem('read_notifications') || '[]');
-                        if (!latestRead.includes(n.id)) {
-                            latestRead.push(n.id);
-                            localStorage.setItem('read_notifications', JSON.stringify(latestRead));
-                            initNotificationBadge(); // Cập nhật lại số lượng ở sidebar
-                        }
+                        await updateDoc(doc(db, "notifications", n.id), { isRead: true });
                     }
                 });
 
@@ -604,7 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td><i class="fa-solid fa-users"></i> ${bidCount}</td>
                 <td><strong>${window.Utils.formatCurrency(product.currentPrice)}</strong></td>
-                <td><span class="status-pill leading">Đang đấu giá</span></td>
+                <td><span class="status-pill ${product.isArchived ? 'ended' : 'leading'}">${product.isArchived ? 'Đã ẩn' : 'Đang đấu giá'}</span></td>
                 <td>
                     <div class="manage-actions">
                         <a href="product-detail.html?id=${product.id}" class="action-btn view" title="Xem"><i class="fa-solid fa-eye"></i></a>

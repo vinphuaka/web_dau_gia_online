@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ người bán - BidMaster</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="global-header">
+        <div class="header-container">
+            <div class="brand-logo">
+                <a href="index.html"><i class="fa-solid fa-gavel"></i> <span>BidMaster</span></a>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="search-input" placeholder="Tìm sản phẩm của người bán này...">
+                <button type="button"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <div class="user-actions">
+                <a href="index.html" class="sell-button">Về trang chủ</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="margin-top: 40px; min-height: 80vh;">
+        <!-- Header hồ sơ -->
+        <section class="profile-section-card" style="display: flex; align-items: center; gap: 30px; margin-bottom: 40px;">
+            <div class="profile-avatar-preview-wrapper" style="width: 150px; height: 150px;">
+                <img id="seller-avatar" src="https://i.pravatar.cc/150" alt="Avatar">
+            </div>
+            <div class="seller-info-header">
+                <h1 id="seller-name" style="margin-bottom: 10px;">Đang tải...</h1>
+                <div style="display: flex; gap: 20px; color: var(--text-muted); font-size: 0.95rem;">
+                    <span><i class="fa-solid fa-calendar-check"></i> Tham gia: <span id="seller-join-date">--/--/----</span></span>
+                    <span><i class="fa-solid fa-box-archive"></i> <span id="seller-product-count">0</span> sản phẩm</span>
+                    <span><i class="fa-solid fa-star" style="color: #f59e0b;"></i> 4.9/5 (Đánh giá)</span>
+                </div>
+                <p id="seller-bio" style="margin-top: 15px; max-width: 600px; line-height: 1.6;">Chuyên doanh các mặt hàng đồng hồ cổ và đồ sưu tầm hiếm có.</p>
+            </div>
+            <div style="margin-left: auto;">
+                <button class="btn-primary" style="padding: 10px 25px;"><i class="fa-solid fa-comment-dots"></i> Nhắn tin</button>
+            </div>
+        </section>
+
+        <div class="dashboard-header-tabs" style="margin-bottom: 30px;">
+            <button class="dashboard-tab-btn active">Sản phẩm đang đấu giá</button>
+        </div>
+
+        <!-- Lưới sản phẩm -->
+        <div id="seller-products-grid" class="product-catalog grid-view">
+            <!-- JS sẽ render card sản phẩm vào đây -->
+        </div>
+    </main>
+
+    <footer style="margin-top: 80px; padding: 40px 0; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted);">
+        <div class="container">
+            <p>&copy; 2024 BidMaster - Sàn đấu giá trực tuyến hàng đầu.</p>
+        </div>
+    </footer>
+
+    <script src="utils.js"></script>
+    <script type="module" src="seller-profile.js"></script>
+</body>
+</html>

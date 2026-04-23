@@ -26,7 +26,7 @@
                     <li class="dropdown">
                         <a href="javascript:void(0)" class="dropbtn">Danh mục <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; margin-left: 4px;"></i></a>
                         <div class="dropdown-content">
-                            <a href="#" data-category="all">Tất cả danh mục</a>
+                            <a href="products.html">Tất cả danh mục</a>
                             <a href="#" data-category="electronics">Điện tử</a>
                             <a href="#" data-category="fashion">Thời trang</a>
                             <a href="#" data-category="watch">Đồng hồ</a>
@@ -42,9 +42,11 @@
             </div>
             <div class="search-bar">
                 <input type="text" id="search-input" placeholder="Tìm kiếm sản phẩm...">
+                <div id="search-loader" class="search-loader"></div>
                 <button type="button" id="search-button">
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
+                <div id="search-suggestions" class="search-suggestions"></div>
             </div>
             <div class="user-actions">
                 <div class="user-utilities">

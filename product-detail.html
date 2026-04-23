@@ -45,8 +45,12 @@
     </header>
 
     <div class="container">
-        <header class="page-title-header">
+        <header class="page-title-header" style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
             <h1 id="product-detail-name">Tên Sản Phẩm Đang Tải...</h1>
+            <div class="owner-actions" style="display: flex; gap: 10px;">
+                <a href="#" id="edit-product-btn" class="btn-outline" style="display: none; text-decoration: none; padding: 8px 16px; font-size: 0.9rem; align-items: center; gap: 8px; border-radius: 8px; white-space: nowrap;"><i class="fa-solid fa-pen-to-square"></i> Chỉnh sửa</a>
+                <button id="archive-product-btn" class="btn-outline" style="display: none; padding: 8px 16px; font-size: 0.9rem; align-items: center; gap: 8px; border-radius: 8px; white-space: nowrap; color: var(--text-muted); border-color: var(--border) !important;"><i class="fa-solid fa-eye-slash"></i> Ẩn sản phẩm</button>
+            </div>
         </header>
 
         <main class="auction-detail-card">
@@ -97,6 +101,16 @@
                     </div>
                 </div>
 
+                <!-- Thông tin người bán -->
+                <div class="seller-preview-box" style="margin-top: 20px; padding: 15px; border: 1px solid var(--border); border-radius: var(--radius); display: flex; align-items: center; gap: 15px;">
+                    <img id="seller-preview-img" src="https://i.pravatar.cc/150" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover;">
+                    <div style="flex: 1;">
+                        <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">Người bán</span>
+                        <strong id="seller-preview-name" style="font-size: 0.95rem;">Đang tải...</strong>
+                    </div>
+                    <a href="#" id="view-seller-profile" class="btn-text" style="font-size: 0.85rem;">Xem hồ sơ</a>
+                </div>
+
                 <div class="bid-controls">
                     <input type="number" id="bid-input" placeholder="Nhập giá tiền...">
                     <button id="bid-button">Đặt Giá</button>
@@ -143,6 +157,34 @@
             <ul id="bid-history">
                 <!-- Danh sách các lượt đặt giá sẽ hiển thị ở đây -->
             </ul>
+        </section>
+
+        <!-- Phần Bình luận & Hỏi đáp -->
+        <section class="comments-section" style="margin-top: 40px; background: var(--card-bg); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow-sm);">
+            <h3><i class="fa-solid fa-comments"></i> Bình luận & Hỏi đáp</h3>
+            <div class="comment-input-group" style="margin-bottom: 25px; margin-top: 20px;">
+                <textarea id="comment-textarea" placeholder="Hỏi người bán về sản phẩm này..." style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; resize: vertical; min-height: 80px; margin-bottom: 10px; font-family: inherit;"></textarea>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button id="submit-comment-btn" class="btn-primary" style="width: auto; padding: 10px 25px;">Gửi bình luận</button>
+                </div>
+            </div>
+            <ul id="comments-list" style="list-style: none; padding: 0; margin: 0;">
+                <!-- Bình luận sẽ được tải vào đây -->
+            </ul>
+        </section>
+
+        <!-- Phần Sản phẩm liên quan -->
+        <section class="related-products-section" style="margin-top: 60px; padding-bottom: 40px;">
+            <div class="section-header" style="margin-bottom: 25px; border-bottom: 2px solid var(--border); padding-bottom: 10px;">
+                <h2 style="font-size: 1.5rem; color: var(--text-main);"><i class="fa-solid fa-layer-group"></i> Sản phẩm liên quan</h2>
+            </div>
+            <div class="carousel-wrapper">
+                <button class="carousel-nav prev" data-target="related-products-grid"><i class="fa-solid fa-chevron-left"></i></button>
+                <div id="related-products-grid" class="product-catalog">
+                    <!-- Các sản phẩm cùng danh mục sẽ được tải vào đây -->
+                </div>
+                <button class="carousel-nav next" data-target="related-products-grid"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
         </section>
     </div>
 

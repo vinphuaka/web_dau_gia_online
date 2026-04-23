@@ -21,6 +21,25 @@ body {
     color: var(--text-main);
     margin: 0;
     padding: 0;
+    opacity: 1;
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+}
+
+body.page-loading {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.page-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--primary);
+    z-index: 10001;
+    width: 0%;
+    transition: width 0.4s ease-out, opacity 0.3s ease;
+    box-shadow: 0 0 10px var(--primary);
 }
 
 .container {
@@ -102,6 +121,7 @@ body {
     background: #f1f5f9; /* Slate 100 */
     border-radius: var(--radius);
     padding: 4px;
+    position: relative;
 }
 
 .search-bar input {
@@ -111,6 +131,68 @@ body {
     outline: none;
     flex-grow: 1;
     font-size: 0.95em;
+}
+
+.search-loader {
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f1f5f9;
+    border-top: 2px solid var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    position: absolute;
+    right: 48px; /* Đặt trước nút tìm kiếm */
+    top: 50%;
+    transform: translateY(-50%);
+    display: none;
+    pointer-events: none;
+}
+
+.search-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-top: 8px;
+    box-shadow: var(--shadow);
+    z-index: 2000;
+    display: none;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.suggestion-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.suggestion-item:last-child { border-bottom: none; }
+.suggestion-item:hover { background: #f8fafc; }
+
+.suggestion-item img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    background: #eee;
+}
+
+.suggestion-info h4 { margin: 0; font-size: 0.9rem; font-weight: 600; color: var(--text-main); }
+.suggestion-info p { margin: 0; font-size: 0.8rem; color: var(--primary); font-weight: 700; }
+
+/* Style cho từ khóa được làm nổi bật */
+.suggestion-info h4 .highlight {
+    background-color: #fef08a; /* Màu vàng nhạt */
+    color: #854d0e; /* Chữ nâu đậm */
+    border-radius: 2px;
 }
 
 .search-bar button {
@@ -399,6 +481,16 @@ button:hover {
 
 .carousel-nav.prev { left: -22.5px; }
 .carousel-nav.next { right: -22.5px; }
+
+/* Chế độ hiển thị lưới cho trang Danh mục */
+.product-catalog.grid-view {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    overflow-x: visible;
+    gap: 30px;
+    padding: 20px 0;
+    scroll-snap-type: none;
+}
 
 .product-catalog, .live-auction-grid {
     display: flex !important; /* Switch from grid to flex for horizontal list */
@@ -2426,3 +2518,57 @@ input:checked + .slider:before {
     min-height: 520px; /* Giữ chiều cao cố định để tránh nhảy trang khi đang load */
     pointer-events: none; /* Ngăn người dùng nhấn lại khi đang xử lý */
 }
+
+/* Pagination Styles */
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.page-link {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+    color: var(--text-main);
+}
+
+.page-link:hover:not(.disabled) {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.page-link.active {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+.page-link.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Seller Badge Styles */
+.seller-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-sm);
+}
+.badge-gold { background: #fef3c7; color: #92400e; border: 1px solid #f59e0b; }
+.badge-silver { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
+.badge-bronze { background: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
+.seller-badge i { font-size: 0.8rem; }
