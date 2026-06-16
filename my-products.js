@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </td>
             <td><strong>${window.Utils.formatCurrency(product.currentPrice)}</strong></td>
             <td>${(product.createdAt?.toDate ? product.createdAt.toDate() : new Date(product.createdAt || 0)).toLocaleDateString('vi-VN')}</td>
-            <td><span class="status-badge active">Đang đấu giá</span></td>
+            <td><span class="status-badge ${product.status === 'pending' ? 'pending' : 'active'}">${product.status === 'pending' ? 'Chờ duyệt' : 'Đang đấu giá'}</span></td>
             <td>
                 <div class="manage-actions">
                     <a href="product-detail.html?id=${product.id}" class="action-btn view" title="Xem chi tiết"><i class="fa-solid fa-eye"></i></a>

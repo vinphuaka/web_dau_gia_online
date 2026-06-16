@@ -152,25 +152,37 @@
             </div>
         </section>
 
-        <section class="history-section">
-            <h3><i class="fa-solid fa-trophy"></i> Bảng xếp hạng đấu giá</h3>
-            <div class="leaderboard-wrapper">
-                <table class="leaderboard-table">
-                    <thead>
-                        <tr>
-                            <th>Hạng</th>
-                            <th>Người đấu giá</th>
-                            <th>Thời gian</th>
-                            <th>Giá đặt thầu</th>
-                            <th>Trạng thái</th>
-                        </tr>
-                    </thead>
-                    <tbody id="bid-history-table-body">
-                        <tr>
-                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px 0;">Chưa có lượt đặt giá nào.</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <section class="history-section" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px;">
+            <!-- Cột bên trái: Bảng xếp hạng -->
+            <div class="leaderboard-column">
+                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-trophy"></i> Bảng xếp hạng đấu giá</h3>
+                <div class="leaderboard-wrapper">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th>Hạng</th>
+                                <th>Người đấu giá</th>
+                                <th>Giá đặt thầu</th>
+                                <th>Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bid-history-table-body">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px 0;">Chưa có lượt đặt giá nào.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Cột bên phải: Lịch sử thầu chi tiết -->
+            <div class="history-column">
+                <h3 style="margin-bottom: 15px;"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử thầu chi tiết</h3>
+                <div class="timeline-wrapper" style="background: white; border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); max-height: 350px; overflow-y: auto;">
+                    <ul id="bid-timeline-list" class="timeline-list" style="list-style: none; padding: 0; margin: 0;">
+                        <li style="text-align: center; color: var(--text-muted); padding: 20px 0;">Chưa có lượt đặt giá nào.</li>
+                    </ul>
+                </div>
             </div>
         </section>
 

@@ -6,7 +6,8 @@ import {
     GoogleAuthProvider,
     FacebookAuthProvider,
     signInWithPopup,
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    signOut
 } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
@@ -30,9 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
             lastLogin: new Date().toISOString()
         };
 
-        // Nếu là người dùng mới đăng nhập lần đầu, thiết lập vai trò mặc định
+        // Nếu là người dùng mới đăng nhập lần đầu, thiết lập vai trò
         if (!userSnap.exists()) {
-            userData.role = 'user';
+            if (user.email && (user.email.startsWith('admin@') || user.email === 'admin@bidmaster.com')) {
+                userData.role = 'admin';
+            } else {
+                userData.role = 'user';
+            }
             userData.createdAt = new Date().toISOString();
         }
 
@@ -52,6 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const userData = userDoc.exists() ? userDoc.data() : null;
         
         console.log("Quyền truy cập của người dùng:", userData?.role || "Không xác định");
+
+        if (userData && userData.status === 'banned') {
+            alert("Tài khoản của bạn đã bị khóa bởi quản trị viên!");
+            await signOut(auth);
+            if (authCard) authCard.classList.remove('skeleton');
+            return;
+        }
 
         if (userData && userData.role === 'admin') {
             window.location.href = 'admin.html';

@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bidButton = document.getElementById('bid-button');
     const bidMessage = document.getElementById('message');
     const bidHistoryTableBody = document.getElementById('bid-history-table-body');
+    const bidTimelineList = document.getElementById('bid-timeline-list');
     const commentTextarea = document.getElementById('comment-textarea');
     const submitCommentBtn = document.getElementById('submit-comment-btn');
     const commentsList = document.getElementById('comments-list');
@@ -340,8 +341,13 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => updateProductUI(product), 500);
         }
 
-        // Ngăn chặn chủ sở hữu tự đấu giá
-        if (isOwner) {
+        // Ngăn chặn đấu giá khi sản phẩm đang chờ duyệt hoặc chủ sở hữu tự đấu giá
+        if (product.status === "pending") {
+            bidInput.disabled = true;
+            bidButton.disabled = true;
+            bidButton.innerText = "Chờ duyệt";
+            bidMessage.innerText = "Sản phẩm này đang chờ quản trị viên phê duyệt.";
+        } else if (isOwner) {
             bidInput.disabled = true;
             bidButton.disabled = true;
             bidButton.innerText = "Sản phẩm của bạn";
@@ -440,25 +446,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderHistory(history) {
-        if (!bidHistoryTableBody) return;
+        if (!bidHistoryTableBody || !bidTimelineList) return;
 
         if (history.length === 0) {
             bidHistoryTableBody.innerHTML = `
                 <tr>
-                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px 0;">Chưa có lượt đặt giá nào.</td>
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px 0;">Chưa có lượt đặt giá nào.</td>
                 </tr>
+            `;
+            bidTimelineList.innerHTML = `
+                <li style="text-align: center; color: var(--text-muted); padding: 20px 0;">Chưa có lượt đặt giá nào.</li>
             `;
             return;
         }
 
-        // Sắp xếp các lượt thầu giảm dần theo số tiền (amount) để tìm người dẫn đầu thực tế
-        const sortedHistory = [...history].sort((a, b) => b.amount - a.amount);
-
-        bidHistoryTableBody.innerHTML = sortedHistory.map((bid, index) => {
+        // 1. Render Bảng Xếp Hạng (Sắp xếp theo giá giảm dần)
+        const sortedLeaderboard = [...history].sort((a, b) => b.amount - a.amount);
+        bidHistoryTableBody.innerHTML = sortedLeaderboard.map((bid, index) => {
             const isLeading = index === 0;
             const rowClass = isLeading ? 'class="row-leading"' : '';
             
-            // Icon huy chương hoặc số thứ hạng
             let rankHtml = '';
             if (index === 0) {
                 rankHtml = '<span class="rank-medal rank-gold" title="Hạng 1"><i class="fa-solid fa-medal"></i></span>';
@@ -470,7 +477,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 rankHtml = `<span class="rank-badge">${index + 1}</span>`;
             }
 
-            // Tag trạng thái
             const statusHtml = isLeading 
                 ? '<span class="status-badge leading"><i class="fa-solid fa-circle-check"></i> Dẫn đầu</span>'
                 : '<span class="status-badge outbid"><i class="fa-solid fa-circle-minus"></i> Bị vượt</span>';
@@ -479,10 +485,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 <tr ${rowClass}>
                     <td>${rankHtml}</td>
                     <td><strong>${maskUsername(bid.user)}</strong></td>
-                    <td><small>${bid.time}</small></td>
                     <td><strong style="color: var(--primary);">${window.Utils.formatCurrency(bid.amount)}</strong></td>
                     <td>${statusHtml}</td>
                 </tr>
+            `;
+        }).join('');
+
+        // 2. Render Timeline Lịch Sử Thầu (Sắp xếp theo thời gian mới nhất lên đầu)
+        // DB lưu theo thứ tự thời gian cũ -> mới. Đảo ngược lại thành mới -> cũ.
+        const timelineBids = [...history].reverse();
+        bidTimelineList.innerHTML = timelineBids.map((bid, index) => {
+            const isLatest = index === 0;
+            return `
+                <li style="display: flex; justify-content: space-between; align-items: center; padding: 12px 10px; border-bottom: 1px dashed var(--border); border-radius: 6px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: ${isLatest ? 'var(--primary)' : 'var(--border)'}; display: inline-block;"></span>
+                        <div>
+                            <strong style="font-size: 0.9rem; color: var(--text-main);">${maskUsername(bid.user)}</strong>
+                            <span style="font-size: 0.75rem; color: var(--text-muted); margin-left: 5px;">${bid.time}</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; display: flex; align-items: center; gap: 5px;">
+                        <strong style="font-size: 0.95rem; color: ${isLatest ? 'var(--primary)' : 'var(--text-main)'};">${window.Utils.formatCurrency(bid.amount)}</strong>
+                        ${isLatest ? '<span style="font-size: 0.65rem; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-weight: 600; display: inline-block;">Mới nhất</span>' : ''}
+                    </div>
+                </li>
             `;
         }).join('');
     }

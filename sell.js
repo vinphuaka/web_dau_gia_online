@@ -448,6 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
           international: document.getElementById("ship-international").checked,
           pickup: document.getElementById("ship-pickup").checked,
         },
+        status: isEditMode ? (currentProductData?.status || "active") : "pending",
         history: [],
         // createdAt chỉ được set khi tạo mới, updatedAt khi cập nhật
         createdAt: isEditMode ? currentProductData.createdAt : new Date().toISOString(),
@@ -471,7 +472,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (statusMsg) statusMsg.innerText = isEditMode ? "Cập nhật thành công!" : "Đăng bài thành công!";
       if (subText)
         subText.innerText =
-          isEditMode ? "Sản phẩm của bạn đã được cập nhật. Đang chuyển hướng về trang chi tiết..." : "Sản phẩm của bạn đã được đưa lên sàn đấu giá. Đang chuyển hướng về trang chủ...";
+          isEditMode ? "Sản phẩm của bạn đã được cập nhật. Đang chuyển hướng về trang chi tiết..." : "Sản phẩm đã được đăng và đang chờ quản trị viên phê duyệt. Đang chuyển hướng...";
 
       // Đợi 2.5 giây để người dùng thấy thông báo thành công rồi mới chuyển hướng
       setTimeout(() => {

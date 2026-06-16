@@ -444,13 +444,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!isInitialLoad) {
       snapshot.docChanges().forEach((change) => {
         if (change.type === "added") {
-          showToast({ id: change.doc.id, ...change.doc.data() });
+          const docData = change.doc.data();
+          if (docData.status !== "pending") {
+            showToast({ id: change.doc.id, ...docData });
+          }
         }
       });
     }
 
     snapshot.forEach((doc) => {
       const data = doc.data();
+      if (data.status === "pending") return;
       // Đảm bảo các giá trị số được convert đúng kiểu để không bị lỗi khi lọc/hiển thị
       firebaseProducts.push({ 
         id: doc.id, 

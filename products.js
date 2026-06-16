@@ -185,7 +185,9 @@ document.addEventListener("DOMContentLoaded", () => {
     
 
     onSnapshot(collection(db, "products"), (snapshot) => {
-        allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        allProducts = snapshot.docs
+            .map(doc => ({ id: doc.id, ...doc.data() }))
+            .filter(product => product.status !== "pending");
         applyFilters();
     });
 

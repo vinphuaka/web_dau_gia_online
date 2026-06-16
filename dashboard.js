@@ -14,8 +14,19 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Kiểm tra trạng thái đăng nhập ---
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
         if (user) {
+            try {
+                const userDoc = await getDoc(doc(db, "users", user.uid));
+                if (userDoc.exists() && userDoc.data().status === 'banned') {
+                    alert('Tài khoản của bạn đã bị khóa bởi quản trị viên!');
+                    await signOut(auth);
+                    window.location.href = 'login.html';
+                    return;
+                }
+            } catch (e) {
+                console.error("Lỗi kiểm tra trạng thái khóa:", e);
+            }
             CURRENT_USER_ID = user.uid;
             CURRENT_USER_NAME = user.displayName;
             initDashboard();

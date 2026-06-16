@@ -2494,6 +2494,7 @@ input:checked + .slider:before {
 .status-badge.role-user { background: #f1f5f9; color: #475569; }
 .status-badge.active { background: #dcfce7; color: #166534; }
 .status-badge.banned { background: #000; color: #fff; }
+.status-badge.pending { background: #fef3c7; color: #b45309; }
 
 .admin-chart-card {
     background: white;
@@ -2749,3 +2750,33 @@ input:checked + .slider:before {
 .leaderboard-table td strong {
     color: var(--text-main);
 }
+
+/* Responsive và Timeline Styles cho Lịch sử Đấu giá Song song */
+@media (max-width: 992px) {
+    .history-section {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+}
+
+.timeline-list li {
+    transition: background 0.2s;
+    padding: 12px 10px !important;
+    border-radius: 6px;
+}
+
+.timeline-list li:hover {
+    background: #f8fafc;
+}
+
+/* ==========================================================================
+   Admin Actions & Status Pill Styles
+   ========================================================================== */
+.action-btn.ban:hover { background: #fee2e2; color: var(--danger); border-color: #fca5a5; }
+.action-btn.unban:hover { background: #ecfdf5; color: var(--success); border-color: #a7f3d0; }
+.action-btn.role:hover { background: #fef3c7; color: #b45309; border-color: #fde68a; }
+.action-btn.approve:hover { background: #ecfdf5; color: var(--success); border-color: #a7f3d0; }
+.action-btn.reject:hover { background: #fff1f2; color: var(--danger); border-color: #fecdd3; }
+
+.status-pill.pending { background: #fef3c7; color: #b45309; }
+.status-pill.banned { background: #fee2e2; color: var(--danger); }
