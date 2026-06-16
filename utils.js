@@ -38,7 +38,8 @@ window.Utils = {
         let isComingSoon = false;
 
         if (product.auctionStart === 'schedule' && product.scheduledAt) {
-            const startTime = new Date(product.scheduledAt).getTime();
+            const startTimeDate = product.scheduledAt?.toDate ? product.scheduledAt.toDate() : new Date(product.scheduledAt);
+            const startTime = startTimeDate.getTime();
             if (now < startTime) {
                 remaining = Math.floor((startTime - now) / 1000);
                 isComingSoon = true;
@@ -47,7 +48,8 @@ window.Utils = {
                 remaining = Math.floor((endTime - now) / 1000);
             }
         } else {
-            const createdAt = new Date(product.createdAt).getTime();
+            const createdAtDate = product.createdAt?.toDate ? product.createdAt.toDate() : new Date(product.createdAt || 0);
+            const createdAt = createdAtDate.getTime();
             const endTime = createdAt + (Number(product.timeRemainingSeconds) * 1000);
             remaining = Math.floor((endTime - now) / 1000);
         }

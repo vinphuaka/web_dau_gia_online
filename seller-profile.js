@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 sellerNameElem.innerText = data.displayName || "Người bán ẩn danh";
                 sellerAvatarElem.src = data.photoURL || "https://i.pravatar.cc/150";
                 if (data.createdAt) {
-                    const date = new Date(data.createdAt);
+                    const date = data.createdAt?.toDate ? data.createdAt.toDate() : new Date(data.createdAt);
                     sellerJoinDateElem.innerText = date.toLocaleDateString('vi-VN');
                 }
 

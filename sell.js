@@ -22,15 +22,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const urlParams = new URLSearchParams(window.location.search);
   const productId = urlParams.get('id');
   const isEditMode = urlParams.get('mode') === 'edit';
-  });
 
   const form = document.getElementById("multi-step-sell-form");
-  const steps = document.querySelectorAll(".form-step");
-  const stepperItems = document.querySelectorAll(".step");
-  const nextBtn = document.getElementById("next-btn");
-  const prevBtn = document.getElementById("prev-btn");
   const formTitle = document.querySelector('.sell-main-content h2');
   const submitBtn = document.getElementById("submit-btn");
+  let currentProductData = null;
+
+  // Thiết lập tên nút hiển thị dựa trên chế độ (Tạo mới hay Chỉnh sửa)
+  if (isEditMode && submitBtn) {
+    submitBtn.innerText = "Cập Nhật Sản Phẩm";
+  } else if (submitBtn) {
+    submitBtn.innerText = "Hoàn Tất Đăng Bài";
+  }
 
   // --- Logic Xử lý Tags ---
   let productTags = [];
@@ -136,8 +139,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  let currentStep = 1;
-
   // --- Logic Xử lý Hình ảnh (Sử dụng URL) ---
   const imageUrlInput = document.getElementById("prod-image-url");
   const previewImg = document.getElementById("prev-img");
@@ -146,22 +147,25 @@ document.addEventListener("DOMContentLoaded", () => {
   imageUrlInput.addEventListener("input", (e) => {
     const url = e.target.value.trim();
     if (url) {
-      previewImg.src = url;
       previewImg.onerror = () => {
-        previewImg.src = "";
+        previewImg.src = "https://placehold.co/300?text=Loi+anh";
         noImgPlaceholder.classList.add("active");
+        noImgPlaceholder.innerText = "Link ảnh bị lỗi hoặc sai định dạng";
       };
-      noImgPlaceholder.classList.remove("active");
+      previewImg.onload = () => {
+        noImgPlaceholder.classList.remove("active");
+      };
+      // Đặt src sau khi đã khai báo sự kiện onload/onerror để tránh bị lỗi với ảnh Base64 load quá nhanh
+      previewImg.src = url;
     } else {
-      previewImg.src = "";
+      previewImg.src = "https://placehold.co/300?text=Chua+co+anh";
       noImgPlaceholder.classList.add("active");
+      noImgPlaceholder.innerText = "Chưa có ảnh";
     }
   });
 
   // --- Logic Validation tập trung (chỉ dùng cho Live Preview và Submit cuối cùng) ---
   function updateNextButtonState() {
-    // Nút "Tiếp theo" luôn được kích hoạt để cho phép người dùng di chuyển tự do giữa các bước
-    nextBtn.disabled = false;
   }
 
   // Hàm tính toán và hiển thị thời gian kết thúc dự kiến
@@ -185,41 +189,6 @@ document.addEventListener("DOMContentLoaded", () => {
       endElem.innerText = `Dự kiến kết thúc: ${endDate.toLocaleString('vi-VN', options)}`;
     }
   }
-
-  // --- Điều hướng và Giao diện ---
-  function updateStepsUI() {
-    steps.forEach((step, idx) => {
-      step.classList.toggle("active", idx + 1 === currentStep);
-    });
-    stepperItems.forEach((item, idx) => {
-      item.classList.toggle("active", idx + 1 <= currentStep);
-    });
-
-    prevBtn.disabled = currentStep === 1;
-
-    if (currentStep === steps.length) {
-      nextBtn.style.display = "none";
-      submitBtn.style.display = "block";
-      submitBtn.innerText = isEditMode ? "Cập Nhật Sản Phẩm" : "Hoàn Tất Đăng Bài";
-    } else {
-      nextBtn.style.display = "block";
-      submitBtn.style.display = "none";
-    }
-    updateNextButtonState();
-  }
-
-  nextBtn.onclick = () => {
-    if (currentStep < steps.length) {
-      currentStep++;
-      updateStepsUI();
-    }
-  };
-  prevBtn.onclick = () => {
-    if (currentStep > 1) {
-      currentStep--;
-      updateStepsUI();
-    }
-  };
 
   // Bước 3: Logic Danh mục
   const mainCatItems = document.querySelectorAll(".main-cats .cat-item");
@@ -352,17 +321,34 @@ document.addEventListener("DOMContentLoaded", () => {
     // Kiểm tra thông tin cuối cùng trước khi đăng bài
     const validateFinal = () => {
       const imageUrl = document.getElementById("prod-image-url").value.trim();
-      if (!imageUrl) {
-        alert("Vui lòng nhập link ảnh sản phẩm.");
-        return false;
+
+      if (imageUrl) {
+        // Kiểm tra xem input có phải là URL HTTP/HTTPS hợp lệ hoặc chuỗi Base64 không
+        const validImageRegex = /^(https?:\/\/.+|data:image\/[a-zA-Z0-9\-\+]+;base64,.*)$/i;
+        if (!validImageRegex.test(imageUrl)) {
+          alert("Đường dẫn không hợp lệ. Vui lòng nhập một đường dẫn web (http/https) hoặc chuỗi Base64.");
+          return false;
+        }
+
+        // Giới hạn dung lượng Base64 (Firestore giới hạn mỗi document tối đa 1MB)
+        // 900.000 ký tự Base64 tương đương khoảng 675KB, chừa không gian cho các trường dữ liệu khác.
+        if (imageUrl.startsWith("data:image/") && imageUrl.length > 900000) {
+          alert("Dung lượng ảnh Base64 quá lớn. Vui lòng nén ảnh xuống dưới 700KB hoặc sử dụng link URL thông thường để tiết kiệm dung lượng Firestore.");
+          return false;
+        }
       }
 
       const name = document.getElementById("prod-name").value.trim();
+      const desc = document.getElementById("prod-desc").value.trim();
       const brand = document.getElementById("prod-brand").value.trim();
       const cat = form.dataset.selectedMainCat;
 
       if (name.length < 10) {
         alert("Tiêu đề bài đăng phải có ít nhất 10 ký tự.");
+        return false;
+      }
+      if (desc.length < 10) {
+        alert("Vui lòng nhập mô tả chi tiết cho sản phẩm.");
         return false;
       }
       if (!brand) {
@@ -439,7 +425,7 @@ document.addEventListener("DOMContentLoaded", () => {
         minIncrement:
           parseInt(document.getElementById("prod-increment").value) || 100000,
         sellerId: CURRENT_USER_ID,
-        imageUrl: document.getElementById("prod-image-url").value.trim(),
+        imageUrl: document.getElementById("prod-image-url").value.trim() || "https://placehold.co/600x450?text=Chua+co+anh",
         description: document.getElementById("prod-desc").value,
         timeRemainingSeconds: (
           (parseInt(document.getElementById("prod-days").value) || 0) * 86400 +
@@ -601,5 +587,4 @@ document.addEventListener("DOMContentLoaded", () => {
     loadProductForEdit(productId);
   }
   updateEndTimePreview();
-  updateStepsUI();
 });

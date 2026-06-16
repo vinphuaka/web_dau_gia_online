@@ -1,6 +1,6 @@
 import { auth, db } from './firebase-config.js';
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { doc, onSnapshot, updateDoc, arrayUnion, collection, query, where, limit, getDocs, deleteDoc, addDoc, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+import { doc, getDoc, onSnapshot, updateDoc, arrayUnion, collection, query, where, limit, getDocs, deleteDoc, addDoc, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     // Hiệu ứng Progress Bar và Fade-in
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const bidInput = document.getElementById('bid-input');
     const bidButton = document.getElementById('bid-button');
     const bidMessage = document.getElementById('message');
-    const bidHistoryList = document.getElementById('bid-history');
+    const bidHistoryTableBody = document.getElementById('bid-history-table-body');
     const commentTextarea = document.getElementById('comment-textarea');
     const submitCommentBtn = document.getElementById('submit-comment-btn');
     const commentsList = document.getElementById('comments-list');
@@ -440,19 +440,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderHistory(history) {
-        bidHistoryList.innerHTML = history.length > 0 
-            ? history.map((bid, index) => `
-                <li class="${index === 0 ? 'leading-bid' : ''}">
-                    <div class="bidder-info-box">
-                        <span class="bidder-name">${maskUsername(bid.user)}</span>
-                        <span class="bid-time">${bid.time}</span>
-                    </div>
-                    <div class="bid-amount-box">
-                        <strong>${window.Utils.formatCurrency(bid.amount)}</strong>
-                        ${index === 0 ? '<span class="leading-badge">Đang dẫn đầu</span>' : ''}
-                    </div>
-                </li>`).join('')
-            : '<li>Chưa có lượt đặt giá nào.</li>';
+        if (!bidHistoryTableBody) return;
+
+        if (history.length === 0) {
+            bidHistoryTableBody.innerHTML = `
+                <tr>
+                    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px 0;">Chưa có lượt đặt giá nào.</td>
+                </tr>
+            `;
+            return;
+        }
+
+        // Sắp xếp các lượt thầu giảm dần theo số tiền (amount) để tìm người dẫn đầu thực tế
+        const sortedHistory = [...history].sort((a, b) => b.amount - a.amount);
+
+        bidHistoryTableBody.innerHTML = sortedHistory.map((bid, index) => {
+            const isLeading = index === 0;
+            const rowClass = isLeading ? 'class="row-leading"' : '';
+            
+            // Icon huy chương hoặc số thứ hạng
+            let rankHtml = '';
+            if (index === 0) {
+                rankHtml = '<span class="rank-medal rank-gold" title="Hạng 1"><i class="fa-solid fa-medal"></i></span>';
+            } else if (index === 1) {
+                rankHtml = '<span class="rank-medal rank-silver" title="Hạng 2"><i class="fa-solid fa-medal"></i></span>';
+            } else if (index === 2) {
+                rankHtml = '<span class="rank-medal rank-bronze" title="Hạng 3"><i class="fa-solid fa-medal"></i></span>';
+            } else {
+                rankHtml = `<span class="rank-badge">${index + 1}</span>`;
+            }
+
+            // Tag trạng thái
+            const statusHtml = isLeading 
+                ? '<span class="status-badge leading"><i class="fa-solid fa-circle-check"></i> Dẫn đầu</span>'
+                : '<span class="status-badge outbid"><i class="fa-solid fa-circle-minus"></i> Bị vượt</span>';
+
+            return `
+                <tr ${rowClass}>
+                    <td>${rankHtml}</td>
+                    <td><strong>${maskUsername(bid.user)}</strong></td>
+                    <td><small>${bid.time}</small></td>
+                    <td><strong style="color: var(--primary);">${window.Utils.formatCurrency(bid.amount)}</strong></td>
+                    <td>${statusHtml}</td>
+                </tr>
+            `;
+        }).join('');
     }
 
     // Logic Tab Control
@@ -493,6 +525,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Xử lý đặt giá
     bidButton.addEventListener('click', async () => {
+        if (!CURRENT_USER_ID) {
+            alert("Vui lòng đăng nhập để tham gia đấu giá.");
+            window.location.href = 'login.html';
+            return;
+        }
+
+        if (currentProductData && CURRENT_USER_ID === currentProductData.sellerId) {
+            window.Utils.showToast ? window.Utils.showToast("Bạn không thể tự đấu giá sản phẩm của chính mình!", "error") : alert("Bạn không thể tự đấu giá sản phẩm của chính mình!");
+            return;
+        }
+
         const bidValue = parseInt(bidInput.value);
         const currentPrice = parseInt(currentPriceElem.innerText.replace(/[^0-9]/g, ''));
 
@@ -512,11 +555,12 @@ document.addEventListener('DOMContentLoaded', () => {
             await updateDoc(docRef, {
                 currentPrice: bidValue,
                 history: arrayUnion({
-                    user: "Người dùng " + Math.floor(Math.random() * 1000), // Giả lập user, bạn có thể thay bằng tên thật nếu có Auth
+                    user: CURRENT_USER_NAME || "Người dùng ẩn danh",
                     amount: bidValue,
                     time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
                 })
             });
+
 
             bidInput.value = '';
             if (window.Utils.showToast) window.Utils.showToast("Đặt giá thành công!", "success");

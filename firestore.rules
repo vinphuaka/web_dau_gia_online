@@ -8,7 +8,6 @@ service cloud.firestore {
     }
 
     // Hàm helper để kiểm tra người dùng có phải là Admin không
-    // Lưu ý: Hàm này thực hiện một lệnh get() vào Firestore nên sẽ tính là 1 lượt đọc (read)
     function isAdmin() {
       return isSignedIn() && 
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
@@ -16,14 +15,70 @@ service cloud.firestore {
 
     // Quy tắc cho collection 'users'
     match /users/{userId} {
-      // Cho phép đọc thông tin nếu đã đăng nhập
       allow read: if isSignedIn();
-      
-      // Cho phép tạo/cập nhật nếu là chính chủ hoặc là Admin
       allow create, update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
-
-      // CHỈ cho phép Admin xóa người dùng
       allow delete: if isAdmin();
+    }
+
+    // Quy tắc cho collection 'products'
+    match /products/{productId} {
+      // Cho phép đọc sản phẩm công khai
+      allow read: if true;
+      
+      // Cho phép tạo sản phẩm mới nếu đã đăng nhập
+      allow create: if isSignedIn();
+      
+      // Cho phép cập nhật nếu là người bán sản phẩm đó, hoặc là Admin, hoặc bất kỳ ai đã đăng nhập đặt giá mới (chỉ cập nhật currentPrice, history, updatedAt)
+      allow update: if isSignedIn() && (
+        request.auth.uid == resource.data.sellerId || 
+        isAdmin() || 
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['currentPrice', 'history', 'updatedAt'])
+      );
+      
+      // Cho phép xóa nếu là người bán hoặc Admin
+      allow delete: if isSignedIn() && (request.auth.uid == resource.data.sellerId || isAdmin());
+    }
+
+    // Quy tắc cho collection 'wishlist' (danh sách yêu thích)
+    match /wishlist/{wishlistId} {
+      // Chỉ cho phép chính chủ đọc và ghi
+      allow read, write: if isSignedIn() && (
+        (resource == null || resource.data.userId == request.auth.uid) && 
+        (request.resource == null || request.resource.data.userId == request.auth.uid)
+      );
+    }
+
+    // Quy tắc cho collection 'notifications' (thông báo)
+    match /notifications/{notificationId} {
+      // Chỉ cho phép người nhận đọc, sửa hoặc xóa thông báo của mình
+      allow read, update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+      
+      // Cho phép bất kỳ ai đã đăng nhập tạo thông báo mới (ví dụ: gửi thông báo đặt giá)
+      allow create: if isSignedIn();
+    }
+
+    // Quy tắc cho collection 'transactions' (giao dịch ví/tiền)
+    match /transactions/{transactionId} {
+      // Chỉ cho phép người dùng liên quan đọc thông tin giao dịch của họ
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      
+      // Cho phép tạo giao dịch khi đã đăng nhập
+      allow create: if isSignedIn();
+      
+      // Chỉ có Admin được phép cập nhật hoặc xóa lịch sử giao dịch
+      allow update, delete: if isAdmin();
+    }
+
+    // Quy tắc cho collection 'comments' (bình luận sản phẩm)
+    match /comments/{commentId} {
+      // Cho phép xem bình luận công khai
+      allow read: if true;
+      
+      // Cho phép người dùng đã đăng nhập gửi bình luận
+      allow create: if isSignedIn();
+      
+      // Cho phép chính người bình luận hoặc Admin cập nhật/xóa bình luận
+      allow update, delete: if isSignedIn() && (resource.data.userId == request.auth.uid || isAdmin());
     }
   }
 }

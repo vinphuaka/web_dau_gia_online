@@ -1,27 +1,35 @@
-import { db } from './firebase-config.js';
+import { auth, db } from './firebase-config.js';
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
 import { collection, query, where, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     const productsList = document.getElementById('my-products-list');
     const noProductsMsg = document.getElementById('no-products-msg');
-    const MOCK_USER_ID = "user_123";
 
-    // 1. Lắng nghe danh sách sản phẩm của người dùng này
-    const q = query(collection(db, "products"), where("sellerId", "==", MOCK_USER_ID));
-
-    onSnapshot(q, (snapshot) => {
-        productsList.innerHTML = '';
-        
-        if (snapshot.empty) {
-            noProductsMsg.style.display = 'block';
+    // 1. Kiểm tra trạng thái đăng nhập để lấy thông tin sản phẩm của chính chủ
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = 'login.html';
             return;
         }
 
-        noProductsMsg.style.display = 'none';
-        snapshot.forEach((docSnap) => {
-            const product = { id: docSnap.id, ...docSnap.data() };
-            const row = renderProductRow(product);
-            productsList.appendChild(row);
+        const userId = user.uid;
+        const q = query(collection(db, "products"), where("sellerId", "==", userId));
+
+        onSnapshot(q, (snapshot) => {
+            productsList.innerHTML = '';
+            
+            if (snapshot.empty) {
+                noProductsMsg.style.display = 'block';
+                return;
+            }
+
+            noProductsMsg.style.display = 'none';
+            snapshot.forEach((docSnap) => {
+                const product = { id: docSnap.id, ...docSnap.data() };
+                const row = renderProductRow(product);
+                productsList.appendChild(row);
+            });
         });
     });
 
@@ -38,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </td>
             <td><strong>${window.Utils.formatCurrency(product.currentPrice)}</strong></td>
-            <td>${new Date(product.createdAt).toLocaleDateString('vi-VN')}</td>
+            <td>${(product.createdAt?.toDate ? product.createdAt.toDate() : new Date(product.createdAt || 0)).toLocaleDateString('vi-VN')}</td>
             <td><span class="status-badge active">Đang đấu giá</span></td>
             <td>
                 <div class="manage-actions">

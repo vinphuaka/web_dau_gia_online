@@ -8,6 +8,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth
 const firebaseConfig = {
   apiKey: "AIzaSyCfo2JK81ZL9aG6vDVrANlIjld4HrLuHRU",
   authDomain: "web-dau-gia-online.firebaseapp.com",
+  databaseURL: "https://web-dau-gia-online-default-rtdb.firebaseio.com",
   projectId: "web-dau-gia-online",
   storageBucket: "web-dau-gia-online.firebasestorage.app",
   messagingSenderId: "863395119810",

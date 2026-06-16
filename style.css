@@ -1438,6 +1438,7 @@ button:hover {
     border-radius: var(--radius);
     border: 1px solid var(--border);
     animation: fadeIn 0.4s ease;
+    margin-bottom: 24px;
 }
 
 .form-step.active { display: block; }
@@ -2572,3 +2573,179 @@ input:checked + .slider:before {
 .badge-silver { background: #f1f5f9; color: #475569; border: 1px solid #cbd5e1; }
 .badge-bronze { background: #ffedd5; color: #9a3412; border: 1px solid #fb923c; }
 .seller-badge i { font-size: 0.8rem; }
+
+/* ==========================================================================
+   Horizontal Form List Layout (Option 1) for Registration/Sell Page
+   ========================================================================== */
+.sell-main-content .form-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 24px;
+    position: relative;
+}
+
+.sell-main-content .form-group > label {
+    width: 220px;
+    min-width: 220px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+    font-weight: 600;
+    color: var(--text-main);
+}
+
+.sell-main-content .form-group > input,
+.sell-main-content .form-group > select,
+.sell-main-content .form-group > textarea,
+.sell-main-content .form-group > .selection-cards,
+.sell-main-content .form-group > .category-list,
+.sell-main-content .form-group > .tags-input-wrapper {
+    flex: 1;
+    min-width: 0;
+}
+
+.sell-main-content .form-group > .form-hint,
+.sell-main-content .form-group > .char-counter,
+.sell-main-content .form-group > .error-message,
+.sell-main-content .form-group > #suggested-tags,
+.sell-main-content .form-group > #schedule-container {
+    width: 100%;
+    margin-left: 240px; /* Label width (220px) + Gap (20px) */
+    margin-top: 4px;
+}
+
+.sell-main-content .form-group > #suggested-tags {
+    margin-top: 10px;
+}
+
+/* Adjust row controls in horizontal layout to display fields sequentially */
+.sell-main-content .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* Responsive Styles for smaller viewports */
+@media (max-width: 768px) {
+    .sell-main-content .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .sell-main-content .form-group > label {
+        width: 100%;
+        min-width: 100%;
+    }
+    
+    .sell-main-content .form-group > .form-hint,
+    .sell-main-content .form-group > .char-counter,
+    .sell-main-content .form-group > .error-message,
+    .sell-main-content .form-group > #suggested-tags,
+    .sell-main-content .form-group > #schedule-container {
+        margin-left: 0;
+    }
+}
+
+/* ==========================================================================
+   Bidding Leaderboard Styles (Bảng Xếp Hạng Đấu Giá)
+   ========================================================================== */
+.leaderboard-wrapper {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-top: 15px;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.leaderboard-table th, 
+.leaderboard-table td {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+
+.leaderboard-table th {
+    background: #f8fafc;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+.leaderboard-table tbody tr {
+    transition: background 0.2s;
+}
+
+.leaderboard-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.leaderboard-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Medal Ranks */
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.rank-medal {
+    font-size: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rank-gold { color: #eab308; }
+.rank-silver { color: #94a3b8; }
+.rank-bronze { color: #b45309; }
+
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge.leading {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.status-badge.outbid {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+/* Row Highlight for Leading Bid */
+.leaderboard-table tbody tr.row-leading {
+    background: #f0fdf4;
+}
+.leaderboard-table tbody tr.row-leading:hover {
+    background: #dcfce7;
+}
+
+.leaderboard-table td strong {
+    color: var(--text-main);
+}

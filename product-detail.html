@@ -153,10 +153,25 @@
         </section>
 
         <section class="history-section">
-            <h3><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử đấu giá</h3>
-            <ul id="bid-history">
-                <!-- Danh sách các lượt đặt giá sẽ hiển thị ở đây -->
-            </ul>
+            <h3><i class="fa-solid fa-trophy"></i> Bảng xếp hạng đấu giá</h3>
+            <div class="leaderboard-wrapper">
+                <table class="leaderboard-table">
+                    <thead>
+                        <tr>
+                            <th>Hạng</th>
+                            <th>Người đấu giá</th>
+                            <th>Thời gian</th>
+                            <th>Giá đặt thầu</th>
+                            <th>Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bid-history-table-body">
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px 0;">Chưa có lượt đặt giá nào.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <!-- Phần Bình luận & Hỏi đáp -->
